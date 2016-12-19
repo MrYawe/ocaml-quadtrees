@@ -1,0 +1,11 @@
+type point = {X: int; Y: int};;
+type rect = {Top: int; Bottom: int, Left: int, Right: int};;
+
+type pquadtree =
+    PEmpty
+  | PNoeud of point*rect*pquadtree*pquadtree*pquadtree*pquadtree;;
+
+let pappartient = function
+    PNoeud (p, r, _, _, _, _)
+      when p.X>=r.Left && p.X<=r.Right && p.Y>=r.Bottom && p.Y<=r.Top -> true
+  | _ -> false;;

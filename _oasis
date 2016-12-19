@@ -1,0 +1,43 @@
+Name: Quadtrees
+Version: 0.1
+Synopsis: A project about Quadtrees.
+Authors: yannis.weishaupt@gmail.com
+License: MIT
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+
+Library "quadtrees"
+  Path: src
+  Modules: Foo
+  CompiledObject: best
+
+Executable "main"
+  Path: src
+  MainIs: Main.ml
+  CompiledObject: best
+  BuildDepends: quadtrees
+
+#
+# Tests
+#
+
+Library "test-quadtrees"
+  Path: test
+  Modules: TestFoo
+  CompiledObject: best
+  BuildDepends: quadtrees
+
+Executable "test-main"
+  Path: test
+  MainIs: Test.ml
+  Install: false
+  CompiledObject: best
+  Build$: flag(tests)
+  BuildDepends: oUnit (>= 2.0.0), test-quadtrees
+
+Test "main"
+  Type: Custom (0.0.1)
+  Command: $test_main

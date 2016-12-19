@@ -18,3 +18,11 @@ _build/
 # oasis generated files
 setup.data
 setup.log
+
+# oUnit
+oUnit-*.log
+oUnit-*.cache
+
+# oasis
+*.native
+*.byte
