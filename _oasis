@@ -8,10 +8,13 @@ OASISFormat: 0.4
 BuildTools: ocamlbuild
 Plugins: META (0.4), DevFiles (0.4)
 
+#
+# Quadtrees
+#
 
 Library "quadtrees"
   Path: src
-  Modules: Foo
+  Modules: Foo, Rectangle, Pquadtree
   CompiledObject: best
 
 Executable "main"
@@ -26,7 +29,7 @@ Executable "main"
 
 Library "test-quadtrees"
   Path: test
-  Modules: TestFoo
+  Modules: TestFoo, TestPquadtree
   CompiledObject: best
   BuildDepends: quadtrees
 

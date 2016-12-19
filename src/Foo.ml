@@ -5,5 +5,3 @@ let fgeneric () = failwith "Not implemented";;
 
 let add x y =
   x+y;;
-
-print_string "bonjour";;
