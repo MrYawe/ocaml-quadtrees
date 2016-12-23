@@ -16,6 +16,7 @@ Library "quadtrees"
   Path: src
   Modules: Foo, Rectangle, Pquadtree
   CompiledObject: best
+  BuildDepends: graphics
 
 Executable "main"
   Path: src

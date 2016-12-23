@@ -14,3 +14,10 @@ let get_pole point rect =
     else if point.x < c.x && point.y < c.y then SO
     else if point.x >= c.x && point.y < c.y then SE
     else raise InconsistentPoint;;
+
+let draw_rect rect =
+  Graphics.moveto rect.left rect.bottom;
+  Graphics.lineto rect.right rect.bottom;
+  Graphics.lineto rect.right rect.top;
+  Graphics.lineto rect.left rect.top;
+  Graphics.lineto rect.left rect.bottom;;
