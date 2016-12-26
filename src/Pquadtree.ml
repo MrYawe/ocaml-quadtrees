@@ -72,9 +72,17 @@ let insert point pquadtree =
   in insert_step point base_rect pquadtree;;
 
 
-let rec draw_quadtree = function
+(* let rec draw_quadtree = function
   | PEmpty -> ()
   | PNode (p, r, q1, q2, q3, q4) ->
     Graphics.plot p.x p.y;
-    draw_rect r;
-    draw_quadtree q1; draw_quadtree q2; draw_quadtree q3; draw_quadtree q4;;
+    draw_rectangle r;
+    draw_quadtree q1; draw_quadtree q2; draw_quadtree q3; draw_quadtree q4;; *)
+
+let rec draw_quadtree scale = function
+  | PEmpty -> ()
+  | PNode (p, r, q1, q2, q3, q4) ->
+    (* Graphics.plot (p.x*scale) (p.y*scale); *)
+    draw_point scale p;
+    draw_rectangle scale r;
+    draw_quadtree scale q1; draw_quadtree scale q2; draw_quadtree scale q3; draw_quadtree scale q4;;
