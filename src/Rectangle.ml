@@ -5,7 +5,10 @@ exception InconsistentPoint;;
 
 type rect = {top: int; bottom: int; left: int; right: int};;
 
-let center rect = {x=(rect.right-rect.left)/2; y=(rect.top-rect.bottom)/2};;
+let center rect =
+  Printf.printf "(%d-%d)/2+%d=%d" rect.right rect.left rect.right ((rect.right-rect.left)/2+rect.right);
+  print_newline();
+  {x=(rect.right-rect.left)/2+rect.left; y=(rect.top-rect.bottom)/2+rect.bottom};;
 
 let get_pole point rect =
   let c = center rect in

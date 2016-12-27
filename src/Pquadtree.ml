@@ -71,6 +71,10 @@ let insert point pquadtree =
     | _ -> raise InconsistentPquadtree
   in insert_step point base_rect pquadtree;;
 
+let rec insert_list pquadtree = function
+  | [] -> pquadtree
+  | p::l -> insert_list (insert p pquadtree) l;;
+
 
 (* let rec draw_quadtree = function
   | PEmpty -> ()
