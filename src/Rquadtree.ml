@@ -70,3 +70,11 @@ let rec horizontal_symmetry = function
   | RQ (q1, q2, q3, q4) ->
     RQ (vertical_symmetry q3, vertical_symmetry q4,
       vertical_symmetry q1, vertical_symmetry q2);;
+
+let code rquadtree =
+  let rec code_step acc = function
+    | Plain White -> 1::0::acc
+    | Plain Black -> 1::1::acc
+    | RQ (q1, q2, q3, q4) ->
+      0::(code_step (code_step (code_step (code_step acc q4) q3) q2) q1)
+  in code_step [] rquadtree;;
