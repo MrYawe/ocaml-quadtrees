@@ -49,8 +49,8 @@ let rec intersection rquadtree1 rquadtree2 =
 let rec union rquadtree1 rquadtree2 =
   match (rquadtree1, rquadtree2) with
     | (RQ (q11, q12, q13, q14), RQ (q21, q22, q23, q24)) ->
-      let res = RQ (union q11 q21, union q12 q22, union q13 q23, union q14 q24) in
-        (match res with
+      let res = RQ (union q11 q21, union q12 q22, union q13 q23, union q14 q24)
+      in (match res with
         | RQ (Plain Black, Plain Black, Plain Black, Plain Black) -> Plain Black
         | _ -> res)
     | (Plain White, RQ (q1, q2, q3, q4)) | (RQ (q1, q2, q3, q4), Plain White) ->
@@ -58,3 +58,15 @@ let rec union rquadtree1 rquadtree2 =
         (union (Plain White) q3), (union (Plain White) q4))
     | (Plain White, Plain White) -> Plain White
     | _ -> Plain Black;;
+
+let rec vertical_symmetry = function
+  | Plain c -> Plain c
+  | RQ (q1, q2, q3, q4) ->
+    RQ (vertical_symmetry q2, vertical_symmetry q1,
+      vertical_symmetry q4, vertical_symmetry q3);;
+
+let rec horizontal_symmetry = function
+  | Plain c -> Plain c
+  | RQ (q1, q2, q3, q4) ->
+    RQ (vertical_symmetry q3, vertical_symmetry q4,
+      vertical_symmetry q1, vertical_symmetry q2);;

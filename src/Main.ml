@@ -69,7 +69,10 @@ let () =
     (* draw_pquadtree config.scale pqt_order_2; *)
     (* draw_rquadtree config.scale config.base_length rqt; *)
     (* draw_rquadtree config.scale config.base_length (invert rqt); *)
-    draw_rquadtree config.scale config.base_length (intersection rqt1 rqt2);
+    (* draw_rquadtree config.scale config.base_length (intersection rqt1 rqt2); *)
+
+    (* draw_rquadtree config.scale config.base_length rqt1; *)
+    draw_rquadtree config.scale config.base_length (horizontal_symmetry rqt1);
 
     ignore (Graphics.read_key ());
   with
