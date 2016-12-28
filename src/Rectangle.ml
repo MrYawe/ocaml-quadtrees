@@ -49,3 +49,9 @@ let get_pole point rect =
 let draw_rectangle scale rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
+
+let draw_plain_rectangle scale rect color =
+  Graphics.set_color color;
+  Graphics.fill_rect (rect.left*scale) (rect.bottom*scale)
+    ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);
+  Graphics.set_color Graphics.black;;

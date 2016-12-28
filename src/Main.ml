@@ -1,5 +1,6 @@
 open Rectangle;;
 open Pquadtree;;
+open Rquadtree;;
 open Graphics;;
 
 type config = {base_length:int; scale:int;};;
@@ -29,12 +30,19 @@ let () =
     {x=200; y=200}; {x=190; y=190};
   ];; *)
 
-  let pqt_order_1 = insert_list PEmpty [
+  (* let pqt_order_1 = insert_list PEmpty [
      {x=300; y=10}; {x=373; y=120}; {x=76; y=453}; {x=201; y=89};
    ];;
   let pqt_order_2 = insert_list PEmpty [
     {x=300; y=10}; {x=373; y=120}; {x=201; y=89}; {x=76; y=453};
-  ];;
+  ];; *)
+
+  let rqt = RQ (
+    Plain White,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
 
   let screen_size = Printf.sprintf " %dx%d"
     ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
@@ -44,7 +52,9 @@ let () =
     Graphics.set_window_title "Quadtrees";
     Graphics.set_line_width config.scale;
 
-    draw_quadtree config.scale pqt_order_2;
+    (* draw_pquadtree config.scale pqt_order_2; *)
+    draw_rquadtree 2 config.base_length rqt;
+
     ignore (Graphics.read_key ());
   with
   | Graphic_failure("fatal I/O error") -> print_string "Fermeture de la fenêtre" ; print_newline()

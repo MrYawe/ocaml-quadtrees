@@ -14,7 +14,7 @@ Plugins: META (0.4), DevFiles (0.4)
 
 Library "quadtrees"
   Path: src
-  Modules: Foo, Rectangle, Pquadtree
+  Modules: Foo, Rectangle, Pquadtree, Rquadtree
   CompiledObject: best
   BuildDepends: graphics
 

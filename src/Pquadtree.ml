@@ -70,13 +70,17 @@ let insert point pquadtree =
   let rec insert_step point rect = function
     | PEmpty -> PNode (point, rect, PEmpty, PEmpty, PEmpty, PEmpty)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=NO ->
-      let c = center r in PNode (p, r, (insert_step point {top=r.top; right=c.x; bottom=c.y; left=r.left} q1), q2, q3, q4)
+      let c = center r in
+        PNode (p, r, (insert_step point {top=r.top; right=c.x; bottom=c.y; left=r.left} q1), q2, q3, q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=NE ->
-      let c = center r in PNode (p, r, q1, (insert_step point {top=r.top; right=r.right; bottom=c.y; left=c.x} q2), q3, q4)
+      let c = center r in
+        PNode (p, r, q1, (insert_step point {top=r.top; right=r.right; bottom=c.y; left=c.x} q2), q3, q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=SO ->
-      let c = center r in PNode (p, r, q1, q2, (insert_step point {top=c.y; right=c.x; bottom=r.bottom; left=r.left} q3), q4)
+      let c = center r in
+        PNode (p, r, q1, q2, (insert_step point {top=c.y; right=c.x; bottom=r.bottom; left=r.left} q3), q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=SE ->
-      let c = center r in PNode (p, r, q1, q2, q3, (insert_step point {top=c.y; right=r.right; bottom=r.bottom; left=c.x} q4))
+      let c = center r in
+        PNode (p, r, q1, q2, q3, (insert_step point {top=c.y; right=r.right; bottom=r.bottom; left=c.x} q4))
     | _ -> raise InconsistentPquadtree
   in insert_step point base_rect pquadtree;;
 
@@ -84,10 +88,9 @@ let rec insert_list pquadtree = function
   | [] -> pquadtree
   | p::l -> insert_list (insert p pquadtree) l;;
 
-let rec draw_quadtree scale = function
+let rec draw_pquadtree scale = function
   | PEmpty -> ()
   | PNode (p, r, q1, q2, q3, q4) ->
-    (* Graphics.plot (p.x*scale) (p.y*scale); *)
     draw_point scale p;
     draw_rectangle scale r;
-    draw_quadtree scale q1; draw_quadtree scale q2; draw_quadtree scale q3; draw_quadtree scale q4;;
+    draw_pquadtree scale q1; draw_pquadtree scale q2; draw_pquadtree scale q3; draw_pquadtree scale q4;;
