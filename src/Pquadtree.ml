@@ -27,9 +27,18 @@ exception NoPathFound;;
   | PNode (_, _, _, _, _, q4) -> q4
   | PEmpty ;; *)
 
+let rec pquadtree_equal pquadtree1 pquadtree2 =
+  match (pquadtree1, pquadtree2) with
+    | (PNode (p1, r1, q11, q12, q13, q14), PNode (p2, r2, q21, q22, q23, q24))
+      when (point_equal p1 p2) && (rectangle_equal r1 r2) ->
+        (pquadtree_equal q11 q21) && (pquadtree_equal q12 q22) &&
+        (pquadtree_equal q13 q23) && (pquadtree_equal q14 q24)
+    | (PEmpty, PEmpty) -> true
+    | _ -> false;;
+
 let rec pbelong point = function
   | PEmpty -> false
-  | PNode (p, _, _, _, _, _) when p.x = point.x && p.y = point.y -> true
+  | PNode (p, _, _, _, _, _) when point_equal p point -> true
   | PNode (p, r, q1, _, _, _) when (get_pole point r)=NO -> pbelong point q1
   | PNode (p, r, _, q2, _, _) when (get_pole point r)=NE -> pbelong point q2
   | PNode (p, r, _, _, q3, _) when (get_pole point r)=SO -> pbelong point q3
@@ -49,7 +58,7 @@ let rec pbelong point = function
 
 let rec ppath point = function
   | PEmpty -> raise NoPathFound
-  | PNode (p, _, _, _, _, _) when p.x = point.x && p.y = point.y -> []
+  | PNode (p, _, _, _, _, _) when point_equal p point -> []
   | PNode (p, r, q1, _, _, _) when (get_pole point r)=NO -> NO::(ppath point q1)
   | PNode (p, r, _, q2, _, _) when (get_pole point r)=NE -> NE::(ppath point q2)
   | PNode (p, r, _, _, q3, _) when (get_pole point r)=SO -> SO::(ppath point q3)
@@ -74,14 +83,6 @@ let insert point pquadtree =
 let rec insert_list pquadtree = function
   | [] -> pquadtree
   | p::l -> insert_list (insert p pquadtree) l;;
-
-
-(* let rec draw_quadtree = function
-  | PEmpty -> ()
-  | PNode (p, r, q1, q2, q3, q4) ->
-    Graphics.plot p.x p.y;
-    draw_rectangle r;
-    draw_quadtree q1; draw_quadtree q2; draw_quadtree q3; draw_quadtree q4;; *)
 
 let rec draw_quadtree scale = function
   | PEmpty -> ()

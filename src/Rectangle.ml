@@ -1,13 +1,37 @@
-type pole = NO | NE | SO | SE;;
+(******************************************************************************)
+(*                                Point                                       *)
+(******************************************************************************)
 
 type point = {x: int; y: int};;
 exception InconsistentPoint;;
 
+let point_equal p1 p2 =
+  match (p1, p2) with
+  | (p1, p2) when p1.x=p2.x && p1.y=p2.y -> true
+  | _ -> false;;
+
+let draw_point scale point =
+  let size = 3 in
+    Graphics.moveto ((point.x-size)*scale) (point.y*scale);
+    Graphics.lineto ((point.x+size)*scale) (point.y*scale);
+
+    Graphics.moveto (point.x*scale) ((point.y-size)*scale);
+    Graphics.lineto (point.x*scale) ((point.y+size)*scale);;
+
+(******************************************************************************)
+(*                              Rectangle                                     *)
+(******************************************************************************)
+
+type pole = NO | NE | SO | SE;;
 type rect = {top: int; bottom: int; left: int; right: int};;
 
+let rectangle_equal rect1 rect2 =
+  match (rect1, rect2) with
+  | (r1, r2) when r1.top=r2.top && r1.bottom=r2.bottom &&
+                  r1.left=r2.left && r1.right=r2.right -> true
+  | _ -> false;;
+
 let center rect =
-  Printf.printf "(%d-%d)/2+%d=%d" rect.right rect.left rect.right ((rect.right-rect.left)/2+rect.right);
-  print_newline();
   {x=(rect.right-rect.left)/2+rect.left; y=(rect.top-rect.bottom)/2+rect.bottom};;
 
 let get_pole point rect =
@@ -25,11 +49,3 @@ let get_pole point rect =
 let draw_rectangle scale rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
-
-let draw_point scale point =
-  let size = 3 in
-    Graphics.moveto ((point.x-size)*scale) (point.y*scale);
-    Graphics.lineto ((point.x+size)*scale) (point.y*scale);
-
-    Graphics.moveto (point.x*scale) ((point.y-size)*scale);
-    Graphics.lineto (point.x*scale) ((point.y+size)*scale);;
