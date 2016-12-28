@@ -30,8 +30,38 @@ let rqt_inter_result = RQ (
 let test_intersection test_ctxt =
   assert_equal (rquadtree_equal rqt_inter_result (intersection rqt_inter_1 rqt_inter_2)) true;;
 
+
+
+(******************************************************************************)
+(*                              Test union                                    *)
+(******************************************************************************)
+
+let rqt_union_1 = RQ (
+  Plain Black,
+  Plain White,
+  RQ (Plain Black, Plain White, Plain White, Plain Black),
+  Plain White
+);;
+let rqt_union_2 = RQ (
+  Plain Black,
+  Plain Black,
+  RQ (Plain Black, Plain White, Plain White, Plain White),
+  Plain White
+);;
+
+let rqt_union_result = RQ (
+  Plain Black,
+  Plain Black,
+  RQ (Plain Black, Plain White, Plain White, Plain Black),
+  Plain White
+);;
+
+let test_union test_ctxt =
+  assert_equal (rquadtree_equal rqt_union_result (union rqt_union_1 rqt_union_2)) true;;
+
 (* Name the test cases and group them together *)
 let tests =
 "tests">::: [
   "test_intersection">:: test_intersection;
+  "test_union">:: test_union;
 ];;
