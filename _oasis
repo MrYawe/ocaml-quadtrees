@@ -30,7 +30,7 @@ Executable "main"
 
 Library "test-quadtrees"
   Path: test
-  Modules: TestFoo, TestPquadtree
+  Modules: TestFoo, TestPquadtree, TestRquadtree
   CompiledObject: best
   BuildDepends: quadtrees
 

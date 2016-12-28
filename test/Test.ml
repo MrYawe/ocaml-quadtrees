@@ -6,5 +6,6 @@ let () =
     ("TESTS">::: [
       TestFoo.tests;
       TestPquadtree.tests;
+      TestRquadtree.tests;
    ]);
 ;;

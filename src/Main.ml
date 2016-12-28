@@ -37,15 +37,29 @@ let () =
     {x=300; y=10}; {x=373; y=120}; {x=201; y=89}; {x=76; y=453};
   ];; *)
 
-  let rqt = RQ (
+  (* let rqt = RQ (
     Plain White,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );; *)
+
+  let screen_size = Printf.sprintf " %dx%d"
+    ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
+
+  let rqt1 = RQ (
+    Plain Black,
     Plain Black,
     RQ (Plain Black, Plain White, Plain White, Plain Black),
     Plain White
   );;
 
-  let screen_size = Printf.sprintf " %dx%d"
-    ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
+  let rqt2 = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain White),
+    Plain White
+  );;
 
   try
     Graphics.open_graph screen_size;
@@ -53,8 +67,10 @@ let () =
     Graphics.set_line_width config.scale;
 
     (* draw_pquadtree config.scale pqt_order_2; *)
-    draw_rquadtree 2 config.base_length rqt;
+    (* draw_rquadtree config.scale config.base_length rqt; *)
+    (* draw_rquadtree config.scale config.base_length (invert rqt); *)
+    draw_rquadtree config.scale config.base_length (intersection rqt1 rqt2);
 
     ignore (Graphics.read_key ());
   with
-  | Graphic_failure("fatal I/O error") -> print_string "Fermeture de la fenêtre" ; print_newline()
+  | Graphic_failure("fatal I/O error") -> print_string "Fermeture de la fenêtre" ; print_newline();;
