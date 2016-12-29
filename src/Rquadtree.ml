@@ -78,3 +78,16 @@ let code rquadtree =
     | RQ (q1, q2, q3, q4) ->
       0::(code_step (code_step (code_step (code_step acc q4) q3) q2) q1)
   in code_step [] rquadtree;;
+
+let decode l =
+  let rec decode_step = function
+    | 1::0::l -> Plain White, l
+    | 1::1::l -> Plain Black, l
+    | 0::l ->
+      let q1, l = decode_step l in
+      let q2, l = decode_step l in
+      let q3, l = decode_step l in
+      let q4, l = decode_step l in
+        RQ (q1, q2, q3, q4), l
+    | _ -> failwith "inconsistent rquadtree list"
+  in let rqt,_ = decode_step l in rqt;;

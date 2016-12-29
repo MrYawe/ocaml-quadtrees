@@ -70,10 +70,26 @@ let rqt_code_1 = RQ (
   Plain White
 );;
 
-let rqt_code_1_res = [0;1;1;1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
+let rqt_code_1_res = [0; 1;1; 1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
 
 let test_code test_ctxt =
   assert_equal (code rqt_code_1) rqt_code_1_res;;
+
+(******************************************************************************)
+(*                                Decode                                      *)
+(******************************************************************************)
+
+let rqt_code_1 = RQ (
+  Plain Black,
+  Plain White,
+  RQ (Plain Black, Plain White, Plain White, Plain Black),
+  Plain White
+);;
+
+let rqt_code_1_res = [0; 1;1; 1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
+
+let test_decode test_ctxt =
+  assert_equal (rquadtree_equal rqt_code_1 (decode rqt_code_1_res)) true;;
 
 (* Name the test cases and group them together *)
 let tests =
@@ -81,4 +97,5 @@ let tests =
   "test_intersection">:: test_intersection;
   "test_union">:: test_union;
   "test_code">:: test_code;
+  "test_decode">:: test_decode;
 ];;
