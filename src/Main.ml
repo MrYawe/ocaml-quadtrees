@@ -1,6 +1,7 @@
 open Rectangle;;
 open Pquadtree;;
 open Rquadtree;;
+open RCquadtree;;
 open Graphics;;
 
 type config = {base_length:int; scale:int;};;
@@ -44,10 +45,8 @@ let () =
     Plain White
   );; *)
 
-  let screen_size = Printf.sprintf " %dx%d"
-    ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
 
-  let rqt1 = RQ (
+  (* let rqt1 = RQ (
     Plain Black,
     Plain Black,
     RQ (Plain Black, Plain White, Plain White, Plain Black),
@@ -59,7 +58,20 @@ let () =
     Plain Black,
     RQ (Plain Black, Plain White, Plain White, Plain White),
     Plain White
+  );; *)
+
+  let qt = RCNode(
+    {top=512; bottom=0; left=0; right=512},
+    [{top=100; bottom=10; left=100; right=300}],
+    [],
+    RCEmpty,
+    RCEmpty,
+    RCEmpty,
+    RCEmpty
   );;
+
+  let screen_size = Printf.sprintf " %dx%d"
+    ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
 
   try
     Graphics.open_graph screen_size;
@@ -72,7 +84,9 @@ let () =
     (* draw_rquadtree config.scale config.base_length (intersection rqt1 rqt2); *)
 
     (* draw_rquadtree config.scale config.base_length rqt1; *)
-    draw_rquadtree config.scale config.base_length (horizontal_symmetry rqt1);
+    (* draw_rquadtree config.scale config.base_length (horizontal_symmetry rqt1); *)
+
+    draw_rcquadtree config.scale qt;
 
     ignore (Graphics.read_key ());
   with

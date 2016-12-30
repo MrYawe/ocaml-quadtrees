@@ -50,6 +50,13 @@ let draw_rectangle scale rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
 
+let draw_median scale rect =
+  let c = center rect in
+    Graphics.moveto (c.x*scale) (rect.bottom*scale);
+    Graphics.lineto (c.x*scale) (rect.top*scale);
+    Graphics.moveto (rect.left*scale) (c.y*scale);
+    Graphics.lineto (rect.right*scale) (c.y*scale);;
+
 let draw_plain_rectangle scale rect color =
   Graphics.set_color color;
   Graphics.fill_rect (rect.left*scale) (rect.bottom*scale)

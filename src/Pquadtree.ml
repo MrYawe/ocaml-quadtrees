@@ -93,4 +93,7 @@ let rec draw_pquadtree scale = function
   | PNode (p, r, q1, q2, q3, q4) ->
     draw_point scale p;
     draw_rectangle scale r;
-    draw_pquadtree scale q1; draw_pquadtree scale q2; draw_pquadtree scale q3; draw_pquadtree scale q4;;
+    draw_pquadtree scale q1;
+    draw_pquadtree scale q2;
+    draw_pquadtree scale q3;
+    draw_pquadtree scale q4;;
