@@ -45,3 +45,18 @@ Executable "test-main"
 Test "main"
   Type: Custom (0.0.1)
   Command: $test_main
+
+#
+# Docs
+#
+
+AlphaFeatures: ocamlbuild_more_args
+Document "quadtrees"
+  Type: ocamlbuild (0.4)
+  BuildTools: ocamldoc
+
+  Title: API reference for quadtrees
+  XOCamlbuildPath: .
+  XOCamlbuildExtraArgs:
+    "-docflags '-colorize-code -short-functors -charset utf-8'"
+  XOCamlbuildLibraries: quadtrees

@@ -66,27 +66,27 @@ let rec ppath point = function
   | _ -> raise InconsistentPquadtree;;
 
 
-let insert point pquadtree =
-  let rec insert_step point rect = function
+let pinsert point pquadtree =
+  let rec pinsert_step point rect = function
     | PEmpty -> PNode (point, rect, PEmpty, PEmpty, PEmpty, PEmpty)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=NO ->
       let c = center r in
-        PNode (p, r, (insert_step point {top=r.top; right=c.x; bottom=c.y; left=r.left} q1), q2, q3, q4)
+        PNode (p, r, (pinsert_step point {top=r.top; right=c.x; bottom=c.y; left=r.left} q1), q2, q3, q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=NE ->
       let c = center r in
-        PNode (p, r, q1, (insert_step point {top=r.top; right=r.right; bottom=c.y; left=c.x} q2), q3, q4)
+        PNode (p, r, q1, (pinsert_step point {top=r.top; right=r.right; bottom=c.y; left=c.x} q2), q3, q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=SO ->
       let c = center r in
-        PNode (p, r, q1, q2, (insert_step point {top=c.y; right=c.x; bottom=r.bottom; left=r.left} q3), q4)
+        PNode (p, r, q1, q2, (pinsert_step point {top=c.y; right=c.x; bottom=r.bottom; left=r.left} q3), q4)
     | PNode (p, r, q1, q2, q3, q4) when (get_pole point r)=SE ->
       let c = center r in
-        PNode (p, r, q1, q2, q3, (insert_step point {top=c.y; right=r.right; bottom=r.bottom; left=c.x} q4))
+        PNode (p, r, q1, q2, q3, (pinsert_step point {top=c.y; right=r.right; bottom=r.bottom; left=c.x} q4))
     | _ -> raise InconsistentPquadtree
-  in insert_step point base_rect pquadtree;;
+  in pinsert_step point base_rect pquadtree;;
 
-let rec insert_list pquadtree = function
+let rec pinsert_list pquadtree = function
   | [] -> pquadtree
-  | p::l -> insert_list (insert p pquadtree) l;;
+  | p::l -> pinsert_list (pinsert p pquadtree) l;;
 
 let rec draw_pquadtree scale = function
   | PEmpty -> ()

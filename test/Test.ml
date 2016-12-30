@@ -7,5 +7,6 @@ let () =
       TestFoo.tests;
       TestPquadtree.tests;
       TestRquadtree.tests;
+      TestRCquadtree.tests;
    ]);
 ;;

@@ -4,6 +4,7 @@
 
 type point = {x: int; y: int};;
 exception InconsistentPoint;;
+exception MedianCrossed;;
 
 let point_equal p1 p2 =
   match (p1, p2) with
@@ -28,12 +29,26 @@ type rect = {top: int; bottom: int; left: int; right: int};;
 let rectangle_equal rect1 rect2 =
   match (rect1, rect2) with
   | (r1, r2) when r1.top=r2.top && r1.bottom=r2.bottom &&
-                  r1.left=r2.left && r1.right=r2.right -> true
+                r1.left=r2.left && r1.right=r2.right -> true
   | _ -> false;;
 
-let center rect =
-  {x=(rect.right-rect.left)/2+rect.left; y=(rect.top-rect.bottom)/2+rect.bottom};;
+let rec rectangle_list_equal list1 list2 =
+  match (list1, list2) with
+  | [], [] -> true
+  | r1::l1, r2::l2 when rectangle_equal r1 r2 -> rectangle_list_equal l1 l2
+  | _ -> false;;
 
+
+let center rect =
+  {
+    x=(rect.right-rect.left)/2+rect.left;
+    y=(rect.top-rect.bottom)/2+rect.bottom
+  };;
+
+(**
+  Return the pole depending on the position of the given point against
+  the given rectangle.
+ *)
 let get_pole point rect =
   let c = center rect in
     if point.x < c.x && point.y >= c.y then NO
@@ -42,9 +57,34 @@ let get_pole point rect =
     else if point.x >= c.x && point.y < c.y then SE
     else raise InconsistentPoint;;
 
-(* let draw_rectangle rect =
-  Graphics.draw_rect rect.left rect.bottom
-    (rect.right-rect.left) (rect.top-rect.bottom);; *)
+(**
+  Return the pole depending on the position of the first rectangle against
+  the second rectangle. Raise an error if the first rectangle cross a median
+  of the second rectangle.
+ *)
+let get_pole_rect rect1 rect2 =
+  let c = center rect2 in
+    if rect1.right < c.x && rect1.bottom > c.y then NO
+    else if rect1.left > c.x && rect1.bottom > c.y then NE
+    else if rect1.right < c.x && rect1.top < c.y then SO
+    else if rect1.left > c.x && rect1.top < c.y then SE
+    else raise MedianCrossed;;
+
+(**
+  True if the vertical median of the first rectangle cross the second
+  rectangle.
+ *)
+let vertical_median_cross rect1 rect2 =
+  let c = center rect1 in
+    rect2.left <= c.x && c.x <= rect2.right;;
+
+(**
+  True if the horizontal median of the first rectangle cross the second
+  rectangle.
+ *)
+let horizontal_median_cross rect1 rect2 =
+  let c = center rect1 in
+    rect2.bottom <= c.y && c.y <= rect2.top;;
 
 let draw_rectangle scale rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
