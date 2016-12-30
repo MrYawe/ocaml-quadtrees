@@ -5,6 +5,8 @@ type rquadtree =
     Plain of colors
   | RQ of rquadtree * rquadtree * rquadtree * rquadtree;;
 
+exception InconsistentEncoding;;
+
 
 let rec rquadtree_equal rquadtree1 rquadtree2 =
   match (rquadtree1, rquadtree2) with
@@ -89,5 +91,5 @@ let decode l =
       let q3, l = decode_step l in
       let q4, l = decode_step l in
         RQ (q1, q2, q3, q4), l
-    | _ -> failwith "inconsistent rquadtree list"
-  in let rqt,_ = decode_step l in rqt;;
+    | _ -> raise InconsistentEncoding
+  in let rqt, _ = decode_step l in rqt;;
