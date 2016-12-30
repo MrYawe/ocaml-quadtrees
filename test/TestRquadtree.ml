@@ -130,17 +130,20 @@ let test_code test_ctxt =
 (*                              Test decode                                   *)
 (******************************************************************************)
 
-let rqt_code_1 = RQ (
+let list_decode_1 = [0; 1;1; 1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
+
+let rqt_decode_1_res = RQ (
   Plain Black,
   Plain White,
   RQ (Plain Black, Plain White, Plain White, Plain Black),
   Plain White
 );;
 
-let rqt_code_1_res = [0; 1;1; 1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
+let list_decode_2 = [0; 1;0; 1;1;0; 0;0;1;0;1;1;0;1;0; 1;1];;
 
 let test_decode test_ctxt =
-  assert_equal (rquadtree_equal rqt_code_1 (decode rqt_code_1_res)) true;;
+  assert_equal (rquadtree_equal rqt_decode_1_res (decode list_decode_1)) true;;
+  assert_raises InconsistentEncoding (fun _ -> decode list_decode_2);;
 
 (* Name the test cases and group them together *)
 let tests =
