@@ -28,7 +28,9 @@ let rqt_inter_result = RQ (
 );;
 
 let test_intersection test_ctxt =
-  assert_equal (rquadtree_equal rqt_inter_result (intersection rqt_inter_1 rqt_inter_2)) true;;
+  assert_equal
+    (rquadtree_equal rqt_inter_result (intersection rqt_inter_1 rqt_inter_2))
+    true;;
 
 
 
@@ -57,10 +59,59 @@ let rqt_union_result = RQ (
 );;
 
 let test_union test_ctxt =
-  assert_equal (rquadtree_equal rqt_union_result (union rqt_union_1 rqt_union_2)) true;;
+  assert_equal
+    (rquadtree_equal rqt_union_result (union rqt_union_1 rqt_union_2))
+    true;;
 
 (******************************************************************************)
-(*                                 Code                                       *)
+(*                         Test vertical_symmetry                             *)
+(******************************************************************************)
+
+let rqt_vsymme_1 = RQ (
+  Plain Black,
+  Plain White,
+  RQ (Plain Black, Plain White, Plain White, Plain Black),
+  Plain White
+);;
+
+let rqt_vsymme_result_1 = RQ (
+  Plain White,
+  Plain Black,
+  Plain White,
+  RQ (Plain White, Plain Black, Plain Black, Plain White)
+);;
+
+let test_vertical_symmetry test_ctxt =
+  assert_equal
+    (rquadtree_equal rqt_vsymme_result_1 (vertical_symmetry rqt_vsymme_1))
+    true;;
+
+
+(******************************************************************************)
+(*                         Test horizontal_symmetry                           *)
+(******************************************************************************)
+
+let rqt_hsymme_1 = RQ (
+  Plain Black,
+  Plain White,
+  RQ (Plain Black, Plain White, Plain White, Plain Black),
+  Plain White
+);;
+
+let rqt_hsymme_result_1 = RQ (
+  RQ (Plain White, Plain Black, Plain Black, Plain White),
+  Plain White,
+  Plain Black,
+  Plain White
+);;
+
+let test_horizontal_symmetry test_ctxt =
+  assert_equal
+    (rquadtree_equal rqt_hsymme_result_1 (horizontal_symmetry rqt_hsymme_1))
+    true;;
+
+(******************************************************************************)
+(*                               Test code                                    *)
 (******************************************************************************)
 
 let rqt_code_1 = RQ (
@@ -76,7 +127,7 @@ let test_code test_ctxt =
   assert_equal (code rqt_code_1) rqt_code_1_res;;
 
 (******************************************************************************)
-(*                                Decode                                      *)
+(*                              Test decode                                   *)
 (******************************************************************************)
 
 let rqt_code_1 = RQ (
@@ -96,6 +147,8 @@ let tests =
 "tests">::: [
   "test_intersection">:: test_intersection;
   "test_union">:: test_union;
+  "test_vertical_symmetry">:: test_vertical_symmetry;
+  "test_horizontal_symmetry">:: test_horizontal_symmetry;
   "test_code">:: test_code;
   "test_decode">:: test_decode;
 ];;
