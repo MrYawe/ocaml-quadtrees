@@ -61,3 +61,16 @@ let rec rcinsert ?(surface = base_surface) rect rcquadtree =
     RCNode (s, lv, rect::lh, q1, q2, q3, q4)
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
     aux (RCNode (s, lv, lh, q1, q2, q3, q4));;
+
+let rects_contain p rcquadtree =
+  let rec aux acc = function
+    | RCEmpty -> acc
+    | RCNode (s, lv, lh, q1, q2, q3, q4) ->
+      let res = contain_in_list p (lv@lh) in (
+        match (get_pole p s) with
+        | NO -> aux res q1
+        | NE -> aux res q2
+        | SO -> aux res q3
+        | SE -> aux res q4
+      )
+  in aux [] rcquadtree;;

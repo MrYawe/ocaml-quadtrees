@@ -71,6 +71,20 @@ let get_pole_rect rect1 rect2 =
     else raise MedianCrossed;;
 
 (**
+  True if the given rectangle contains the given point.
+ *)
+let contain point rect =
+  point.x >= rect.left && point.x <= rect.right &&
+  point.y >= rect.bottom && point.y <= rect.top;;
+
+(**
+  Return all rectangles given in the rectangle list that contain the given point
+ *)
+let contain_in_list point li =
+  List.fold_left
+    (fun acc r -> if contain point r then (r::acc) else acc) [] li;;
+
+(**
   True if the vertical median of the first rectangle cross the second
   rectangle.
  *)

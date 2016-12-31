@@ -70,7 +70,7 @@ let () =
     RCEmpty
   );; *)
 
-  let qt = rcinsert {top=100; bottom=10; left=100; right=200} RCEmpty;;
+  let qt = rcinsert {top=100; bottom=99; left=100; right=101} RCEmpty;;
 
 
   let screen_size = Printf.sprintf " %dx%d"
