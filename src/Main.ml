@@ -70,7 +70,23 @@ let () =
     RCEmpty
   );; *)
 
-  let qt = rcinsert {top=100; bottom=99; left=100; right=101} RCEmpty;;
+  (* let qt = rcinsert ~surface:{top=1024; right=1024; bottom=0; left=0}
+            {top=100; bottom=10; left=100; right=300} RCEmpty;; *)
+
+  let qt = rcinsert_list [
+    {top=460; bottom=310; left=230; right=310};
+    {top=265; bottom=230; left=300; right=480};
+    {top=215; bottom=150; left=110; right=235};
+    {top=490; bottom=460; left=410; right=485};
+    {top=275; bottom=240; left=260; right=310};
+    {top=470; bottom=460; left=2; right=20};
+    {top=250; bottom=210; left=270; right=305};
+  ];;
+
+  (* print_string (string_of_rectangle_list [{top=460; bottom=310; left=230; right=310}; {top=460; bottom=310; left=230; right=310}]);; *)
+
+  let res = rccontain qt {x=303; y=245};;
+  print_string (string_of_rectangle_list res);;
 
 
   let screen_size = Printf.sprintf " %dx%d"

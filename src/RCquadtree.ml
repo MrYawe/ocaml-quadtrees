@@ -11,17 +11,6 @@ exception InconsistentRCNode;;
 let base_length = 512;;
 let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
 
-let rec rcquadtree_equal rcquadtree1 rcquadtree2 =
-  match (rcquadtree1, rcquadtree2) with
-  | RCNode (s1, lv1, lh1, q11, q12, q13, q14),
-    RCNode (s2, lv2, lh2, q21, q22, q23, q24)
-    when (rectangle_equal s1 s2) && (rectangle_list_equal lv1 lv2) &&
-    (rectangle_list_equal lh1 lh2) ->
-      (rcquadtree_equal q11 q21) && (rcquadtree_equal q12 q22) &&
-      (rcquadtree_equal q13 q23) && (rcquadtree_equal q14 q24)
-  | RCEmpty, RCEmpty -> true
-  | _ -> false;;
-
 let rec draw_rcquadtree scale = function
   | RCEmpty -> ()
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
@@ -36,6 +25,15 @@ let rec draw_rcquadtree scale = function
     draw_rcquadtree scale q3;
     draw_rcquadtree scale q4;;
 
+let rec print_rcquadtree = function
+  | RCEmpty -> ()
+  | RCNode (s, lv, lh, q1, q2, q3, q4) ->
+    Printf.printf "s: top=%d; right=%d; bottom=%d; left=%d;\n" s.top s.right s.bottom s.left;
+    Printf.printf "**q1**"; print_rcquadtree q1; Printf.printf "\n";
+    Printf.printf "**q2**"; print_rcquadtree q2; Printf.printf "\n";
+    Printf.printf "**q3**"; print_rcquadtree q3; Printf.printf "\n";
+    Printf.printf "**q4**"; print_rcquadtree q4; Printf.printf "\n";;
+
 let rec rcinsert ?(surface = base_surface) rect rcquadtree =
   let aux = function
     | RCNode (s, lv, lh, q1, q2, q3, q4) ->
@@ -47,8 +45,7 @@ let rec rcinsert ?(surface = base_surface) rect rcquadtree =
         | SE -> RCNode (s, lv, lh, q1, q2, q3, (rcinsert ~surface:{top=c.y; right=s.right; bottom=s.bottom; left=c.x} rect q4))
       )
     | _ -> raise InconsistentRCNode
-  in
-  match rcquadtree with
+  in match rcquadtree with
   | RCEmpty when vertical_median_cross surface rect ->
     RCNode (surface, [rect], [], RCEmpty, RCEmpty, RCEmpty, RCEmpty)
   | RCEmpty when horizontal_median_cross surface rect ->
@@ -62,15 +59,21 @@ let rec rcinsert ?(surface = base_surface) rect rcquadtree =
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
     aux (RCNode (s, lv, lh, q1, q2, q3, q4));;
 
-let rects_contain p rcquadtree =
+let rcinsert_list ?(surface = base_surface) rect_list =
+  List.fold_right (rcinsert ~surface: surface) rect_list RCEmpty;;
+
+let rccontain rcquadtree p =
   let rec aux acc = function
     | RCEmpty -> acc
     | RCNode (s, lv, lh, q1, q2, q3, q4) ->
       let res = contain_in_list p (lv@lh) in (
         match (get_pole p s) with
-        | NO -> aux res q1
-        | NE -> aux res q2
-        | SO -> aux res q3
-        | SE -> aux res q4
+        | NO -> aux (res@acc) q1
+        | NE -> aux (res@acc) q2
+        | SO -> aux (res@acc) q3
+        | SE -> aux (res@acc) q4
       )
   in aux [] rcquadtree;;
+
+(* let rccontain_list li rcquadtree =
+  List.iter *)

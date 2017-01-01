@@ -100,6 +100,17 @@ let horizontal_median_cross rect1 rect2 =
   let c = center rect1 in
     rect2.bottom <= c.y && c.y <= rect2.top;;
 
+let string_of_rectangle rect =
+  Printf.sprintf
+    "{top=%d; bottom=%d; left=%d; right=%d}"
+    rect.top rect.bottom rect.left rect.right;;
+
+let string_of_rectangle_list li =
+  let rect_strings = List.map string_of_rectangle li in
+    let rect_strings = String.concat ";\n" rect_strings in
+      Printf.sprintf "[\n%s\n]" rect_strings;;
+
+
 let draw_rectangle scale rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
