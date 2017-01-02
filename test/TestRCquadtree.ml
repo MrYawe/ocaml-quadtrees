@@ -169,7 +169,7 @@ let test_rcinsert test_ctxt =
 
 
 (******************************************************************************)
-(*                            Test contains                                   *)
+(*                          Test rccontains                                   *)
 (******************************************************************************)
 
 let rccontain_pqadtrees = [
@@ -228,8 +228,6 @@ let test_rccontain test_ctxt =
     (fun pqt pts -> List.map (rccontain pqt) pts)
     rccontain_pqadtrees
     rccontain_points in
-    (* let map_res = List.map (fun li -> List.map string_of_rectangle_list li) res in
-      List.iter (fun li -> List.iter print_string li) map_res; *)
       List.iter2
         (fun res1 res2 ->
             List.iter2
