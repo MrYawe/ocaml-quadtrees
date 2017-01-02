@@ -1,3 +1,4 @@
+open Point;;
 open Rectangle;;
 
 type colors = White | Black ;;

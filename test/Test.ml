@@ -4,7 +4,7 @@ let () =
 
   run_test_tt_main
     ("TESTS">::: [
-      TestFoo.tests;
+      TestPoint.tests;
       TestPquadtree.tests;
       TestRquadtree.tests;
       TestRCquadtree.tests;

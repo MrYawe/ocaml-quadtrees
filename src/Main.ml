@@ -1,3 +1,4 @@
+open Point;;
 open Rectangle;;
 open Pquadtree;;
 open Rquadtree;;
