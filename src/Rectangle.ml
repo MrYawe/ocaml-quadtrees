@@ -115,10 +115,12 @@ let string_of_rectangle rect =
     "{top=%d; bottom=%d; left=%d; right=%d}"
     rect.top rect.bottom rect.left rect.right;;
 
-let string_of_rectangle_list li =
-  let rect_strings = List.map string_of_rectangle li in
-    let rect_strings = String.concat ";\n" rect_strings in
-      Printf.sprintf "[\n%s\n]" rect_strings;;
+let string_of_rectangle_list ?(indent=0) li =
+  let rect_strings = List.map string_of_rectangle li and
+  i = String.make indent ' ' and
+  i2 = String.make (indent+3) ' ' in
+    let rect_strings = String.concat (Printf.sprintf ";\n%s" i2) rect_strings in
+      Printf.sprintf "\n%s[\n%s%s\n%s]" i i2 rect_strings i;;
 
 let draw_rectangle ?(scale=1) rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)

@@ -59,8 +59,8 @@ let pqt_order_22 = pinsert_list [
 
 let test_order test_ctxt =
   (* It can be equals ... *)
-  assert_equal pqt_order_11 pqt_order_12;
-  (* but not all the time ... *)
+  assert_equal ~printer:string_of_pquadtree pqt_order_11 pqt_order_12;
+  (* or not. *)
   assert_equal (pqt_order_21=pqt_order_22) false;;
 
 (* Name the test cases and group them together *)

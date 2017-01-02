@@ -25,6 +25,21 @@ let rec draw_rcquadtree ?(scale=1)  = function
     draw_rcquadtree ~scale:scale q3;
     draw_rcquadtree ~scale:scale q4;;
 
+let rec string_of_rcquadtree ?(indent=0) = function
+  | RCEmpty -> "RCEmpty"
+  | RCNode (s, lv, lh, q1, q2, q3, q4) ->
+    let is = String.make indent ' ' and
+    ss = string_of_rectangle s and
+    lvs = string_of_rectangle_list lv and
+    lhs = string_of_rectangle_list lh and
+    q1s = string_of_rcquadtree ~indent:(indent+3) q1 and
+    q2s = string_of_rcquadtree ~indent:(indent+3) q2 and
+    q3s = string_of_rcquadtree ~indent:(indent+3) q3 and
+    q4s = string_of_rcquadtree ~indent:(indent+3) q4 in
+      Printf.sprintf
+        "\n%slv:%s\n%slh:%s\n%sr:%s\n%sq1:%s\n%sq2:%s\n%sq3:%s\n%sq4:%s"
+        is lvs is lhs is ss is q1s is q2s is q3s is q4s;;
+
 let rec print_rcquadtree = function
   | RCEmpty -> ()
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
@@ -34,15 +49,15 @@ let rec print_rcquadtree = function
     Printf.printf "**q3**"; print_rcquadtree q3; Printf.printf "\n";
     Printf.printf "**q4**"; print_rcquadtree q4; Printf.printf "\n";;
 
-let rec rcinsert ?(surface = base_surface) rect rcquadtree =
+let rec rcinsert ?(surface = base_surface) rcquadtree rect =
   let aux = function
     | RCNode (s, lv, lh, q1, q2, q3, q4) ->
       let c = center s in (
         match (get_pole_rect rect s) with
-        | NO -> RCNode (s, lv, lh, (rcinsert ~surface:{top=s.top; right=c.x; bottom=c.y; left=s.left} rect q1), q2, q3, q4)
-        | NE -> RCNode (s, lv, lh, q1, (rcinsert ~surface:{top=s.top; right=s.right; bottom=c.y; left=c.x} rect q2), q3, q4)
-        | SO -> RCNode (s, lv, lh, q1, q2, (rcinsert ~surface:{top=c.y; right=c.x; bottom=s.bottom; left=s.left} rect q3), q4)
-        | SE -> RCNode (s, lv, lh, q1, q2, q3, (rcinsert ~surface:{top=c.y; right=s.right; bottom=s.bottom; left=c.x} rect q4))
+        | NO -> RCNode (s, lv, lh, (rcinsert ~surface:{top=s.top; right=c.x; bottom=c.y; left=s.left} q1 rect), q2, q3, q4)
+        | NE -> RCNode (s, lv, lh, q1, (rcinsert ~surface:{top=s.top; right=s.right; bottom=c.y; left=c.x} q2 rect), q3, q4)
+        | SO -> RCNode (s, lv, lh, q1, q2, (rcinsert ~surface:{top=c.y; right=c.x; bottom=s.bottom; left=s.left} q3 rect), q4)
+        | SE -> RCNode (s, lv, lh, q1, q2, q3, (rcinsert ~surface:{top=c.y; right=s.right; bottom=s.bottom; left=c.x} q4 rect))
       )
     | _ -> raise InconsistentRCNode
   in match rcquadtree with
@@ -61,7 +76,7 @@ let rec rcinsert ?(surface = base_surface) rect rcquadtree =
 
 (* TODO: fold_left because the order is inversed *)
 let rcinsert_list ?(surface = base_surface) rect_list =
-  List.fold_right (rcinsert ~surface: surface) rect_list RCEmpty;;
+  List.fold_left (rcinsert ~surface:surface) RCEmpty rect_list;;
 
 let rccontain rcquadtree p =
   let rec aux acc = function

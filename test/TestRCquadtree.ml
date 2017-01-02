@@ -12,10 +12,10 @@ let bs = base_surface;;
 
 let rcinsert_pquadtrees = [
   (* #1 *)
-  rcinsert {top=100; bottom=10; left=100; right=300} RCEmpty;
+  rcinsert RCEmpty {top=100; bottom=10; left=100; right=300};
 
   (* #2 *)
-  rcinsert {top=100; bottom=10; left=100; right=200} RCEmpty;
+  rcinsert RCEmpty {top=100; bottom=10; left=100; right=200};
 
   (* #3 *)
   rcinsert_list [
@@ -26,14 +26,14 @@ let rcinsert_pquadtrees = [
   (* #4 *)
   rcinsert
     ~surface:{top=1024; right=1024; bottom=0; left=0}
-    {top=600; bottom=500; left=10; right=220}
-    RCEmpty;
+    RCEmpty
+    {top=600; bottom=500; left=10; right=220};
 
   (* #5 *)
   rcinsert
     ~surface:{top=1024; right=1024; bottom=0; left=0}
-    {top=100; bottom=10; left=100; right=300}
-    RCEmpty;
+    RCEmpty
+    {top=100; bottom=10; left=100; right=300};
 
   (* #6 *)
   rcinsert_list ~surface:{top=1024; right=1024; bottom=0; left=0} [
@@ -48,11 +48,11 @@ let rcinsert_pquadtrees = [
    *)
   rcinsert
     ~surface:{top=3; right=3; bottom=3; left=3}
-    {top=400; bottom=70; left=600; right=750}
     (rcinsert
       ~surface:{top=1024; right=1024; bottom=0; left=0}
-      {top=100; bottom=10; left=100; right=300}
-      RCEmpty);
+      RCEmpty
+      {top=100; bottom=10; left=100; right=300})
+    {top=400; bottom=70; left=600; right=750};
 ]
 
 let rcinsert_res = [
@@ -215,8 +215,8 @@ let rccontain_expected = [
   [
     [ (* ##1 *)
       {top=250; bottom=210; left=270; right=305};
-      {top=275; bottom=240; left=260; right=310};
       {top=265; bottom=230; left=300; right=480};
+      {top=275; bottom=240; left=260; right=310};
     ];
   ]
 ]
@@ -229,11 +229,12 @@ let test_rccontain test_ctxt =
     rccontain_points in
     (* let map_res = List.map (fun li -> List.map string_of_rectangle_list li) res in
       List.iter (fun li -> List.iter print_string li) map_res; *)
-      (* List.iter2
-        (fun res1 res2 -> List.iter2 assert_equal res1 res2)
+      List.iter2
+        (fun res1 res2 ->
+            List.iter2
+              (assert_equal ~printer:string_of_rectangle_list) res1 res2)
         rccontain_expected
-        res;; *)
-        assert_equal rccontain_expected res;;
+        res;;
 
 let tests =
 "rcquadtree_tests">::: [
