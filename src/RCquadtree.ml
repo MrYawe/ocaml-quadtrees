@@ -11,19 +11,19 @@ exception InconsistentRCNode;;
 let base_length = 512;;
 let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
 
-let rec draw_rcquadtree scale = function
+let rec draw_rcquadtree ?(scale=1)  = function
   | RCEmpty -> ()
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
-    draw_rectangle scale s;
-    draw_median scale s;
+    draw_rectangle ~scale:scale s;
+    draw_median ~scale:scale s;
     Graphics.set_color Graphics.blue;
-    List.iter (draw_rectangle scale) lv;
-    List.iter (draw_rectangle scale) lh;
+    List.iter (draw_rectangle ~scale:scale) lv;
+    List.iter (draw_rectangle ~scale:scale) lh;
     Graphics.set_color Graphics.black;
-    draw_rcquadtree scale q1;
-    draw_rcquadtree scale q2;
-    draw_rcquadtree scale q3;
-    draw_rcquadtree scale q4;;
+    draw_rcquadtree ~scale:scale q1;
+    draw_rcquadtree ~scale:scale q2;
+    draw_rcquadtree ~scale:scale q3;
+    draw_rcquadtree ~scale:scale q4;;
 
 let rec print_rcquadtree = function
   | RCEmpty -> ()

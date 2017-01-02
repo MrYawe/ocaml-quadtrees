@@ -97,15 +97,15 @@ let () =
     Graphics.set_window_title "Quadtrees";
     Graphics.set_line_width config.scale;
 
-    (* draw_pquadtree config.scale pqt_order_2; *)
-    (* draw_rquadtree config.scale config.base_length rqt; *)
-    (* draw_rquadtree config.scale config.base_length (invert rqt); *)
-    (* draw_rquadtree config.scale config.base_length (intersection rqt1 rqt2); *)
+    (* draw_pquadtree ~scale:config.scale pqt_order_2; *)
+    (* draw_rquadtree ~scale:config.scale config.base_length rqt; *)
+    (* draw_rquadtree ~scale:config.scale config.base_length (invert rqt); *)
+    (* draw_rquadtree ~scale:config.scale config.base_length (intersection rqt1 rqt2); *)
 
-    (* draw_rquadtree config.scale config.base_length rqt1; *)
-    (* draw_rquadtree config.scale config.base_length (horizontal_symmetry rqt1); *)
+    (* draw_rquadtree ~scale:config.scale config.base_length rqt1; *)
+    (* draw_rquadtree ~scale:config.scale config.base_length (horizontal_symmetry rqt1); *)
 
-    draw_rcquadtree config.scale qt;
+    draw_rcquadtree ~scale:config.scale qt;
 
     ignore (Graphics.read_key ());
   with

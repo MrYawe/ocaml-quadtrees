@@ -11,7 +11,7 @@ let point_equal p1 p2 =
   | (p1, p2) when p1.x=p2.x && p1.y=p2.y -> true
   | _ -> false;;
 
-let draw_point scale point =
+let draw_point ?(scale=1) point =
   let size = 3 in
     Graphics.moveto ((point.x-size)*scale) (point.y*scale);
     Graphics.lineto ((point.x+size)*scale) (point.y*scale);
@@ -111,18 +111,18 @@ let string_of_rectangle_list li =
       Printf.sprintf "[\n%s\n]" rect_strings;;
 
 
-let draw_rectangle scale rect =
+let draw_rectangle ?(scale=1) rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
 
-let draw_median scale rect =
+let draw_median ?(scale=1) rect =
   let c = center rect in
     Graphics.moveto (c.x*scale) (rect.bottom*scale);
     Graphics.lineto (c.x*scale) (rect.top*scale);
     Graphics.moveto (rect.left*scale) (c.y*scale);
     Graphics.lineto (rect.right*scale) (c.y*scale);;
 
-let draw_plain_rectangle scale rect color =
+let draw_plain_rectangle ?(scale=1) rect color =
   Graphics.set_color color;
   Graphics.fill_rect (rect.left*scale) (rect.bottom*scale)
     ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);

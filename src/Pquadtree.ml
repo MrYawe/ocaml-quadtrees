@@ -88,12 +88,12 @@ let rec pinsert_list pquadtree = function
   | [] -> pquadtree
   | p::l -> pinsert_list (pinsert p pquadtree) l;;
 
-let rec draw_pquadtree scale = function
+let rec draw_pquadtree ?(scale=1) = function
   | PEmpty -> ()
   | PNode (p, r, q1, q2, q3, q4) ->
-    draw_point scale p;
-    draw_rectangle scale r;
-    draw_pquadtree scale q1;
-    draw_pquadtree scale q2;
-    draw_pquadtree scale q3;
-    draw_pquadtree scale q4;;
+    draw_point ~scale:scale p;
+    draw_rectangle ~scale:scale r;
+    draw_pquadtree ~scale:scale q1;
+    draw_pquadtree ~scale:scale q2;
+    draw_pquadtree ~scale:scale q3;
+    draw_pquadtree ~scale:scale q4;;

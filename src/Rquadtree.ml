@@ -16,21 +16,21 @@ let rec rquadtree_equal rquadtree1 rquadtree2 =
     | (Plain c1, Plain c2) when c1=c2 -> true
     | _ -> false;;
 
-let draw_rquadtree scale base_size rquadtree =
-  let rec draw_rquadtree_step scale rect = function
+let draw_rquadtree ?(scale=1) base_size rquadtree =
+  let rec aux scale rect = function
     | Plain White ->
-      draw_plain_rectangle scale rect Graphics.white;
-      draw_rectangle scale rect
+      draw_plain_rectangle ~scale:scale rect Graphics.white;
+      draw_rectangle ~scale:scale rect
     | Plain Black ->
-      draw_plain_rectangle scale rect Graphics.black;
-      draw_rectangle scale rect
+      draw_plain_rectangle ~scale:scale rect Graphics.black;
+      draw_rectangle ~scale:scale rect
     | RQ (q1, q2, q3, q4) ->
       let c = center rect in
-        draw_rquadtree_step scale {top=rect.top; right=c.x; bottom=c.y; left=rect.left} q1;
-        draw_rquadtree_step scale {top=rect.top; right=rect.right; bottom=c.y; left=c.x} q2;
-        draw_rquadtree_step scale {top=c.y; right=c.x; bottom=rect.bottom; left=rect.left} q3;
-        draw_rquadtree_step scale {top=c.y; right=rect.right; bottom=rect.bottom; left=c.x} q4;
-  in draw_rquadtree_step scale {top=base_size; right=base_size; bottom=0; left=0} rquadtree;;
+        aux scale {top=rect.top; right=c.x; bottom=c.y; left=rect.left} q1;
+        aux scale {top=rect.top; right=rect.right; bottom=c.y; left=c.x} q2;
+        aux scale {top=c.y; right=c.x; bottom=rect.bottom; left=rect.left} q3;
+        aux scale {top=c.y; right=rect.right; bottom=rect.bottom; left=c.x} q4;
+  in aux scale {top=base_size; right=base_size; bottom=0; left=0} rquadtree;;
 
 let rec invert = function
   | Plain White -> Plain Black

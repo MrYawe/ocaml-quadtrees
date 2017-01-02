@@ -171,11 +171,6 @@ let test_rcinsert test_ctxt =
 (*                            Test contains                                   *)
 (******************************************************************************)
 
-(* let rccontain_pqadtrees = [
-  (* #1 *)
-  rcinsert {top=100; bottom=10; left=100; right=300} RCEmpty;
-] *)
-
 let rccontain_pqadtrees = [
   (* #1 *)
   rcinsert_list [{top=100; bottom=10; left=100; right=300}];
