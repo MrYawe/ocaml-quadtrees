@@ -59,6 +59,7 @@ let rec rcinsert ?(surface = base_surface) rect rcquadtree =
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
     aux (RCNode (s, lv, lh, q1, q2, q3, q4));;
 
+(* TODO: fold_left because the order is inversed *)
 let rcinsert_list ?(surface = base_surface) rect_list =
   List.fold_right (rcinsert ~surface: surface) rect_list RCEmpty;;
 
@@ -74,6 +75,3 @@ let rccontain rcquadtree p =
         | SE -> aux (res@acc) q4
       )
   in aux [] rcquadtree;;
-
-(* let rccontain_list li rcquadtree =
-  List.iter *)

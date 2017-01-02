@@ -73,7 +73,7 @@ let () =
   (* let qt = rcinsert ~surface:{top=1024; right=1024; bottom=0; left=0}
             {top=100; bottom=10; left=100; right=300} RCEmpty;; *)
 
-  let qt = rcinsert_list [
+  (* let qt = rcinsert_list [
     {top=460; bottom=310; left=230; right=310};
     {top=265; bottom=230; left=300; right=480};
     {top=215; bottom=150; left=110; right=235};
@@ -81,13 +81,30 @@ let () =
     {top=275; bottom=240; left=260; right=310};
     {top=470; bottom=460; left=2; right=20};
     {top=250; bottom=210; left=270; right=305};
-  ];;
+  ];; *)
 
   (* print_string (string_of_rectangle_list [{top=460; bottom=310; left=230; right=310}; {top=460; bottom=310; left=230; right=310}]);; *)
 
-  let res = rccontain qt {x=303; y=245};;
-  print_string (string_of_rectangle_list res);;
+  (* let res = rccontain qt {x=303; y=245};;
+  print_string (string_of_rectangle_list res);; *)
 
+
+  (* let pqt_order_21_bis = pinsert {x=76; y=453} (pinsert {x=201; y=89} (pinsert {x=373; y=120} (pinsert {x=300; y=10} PEmpty)));; *)
+
+  let pqt_order_21 = pinsert_list [
+    {x=300; y=10}; {x=373; y=120}; {x=201; y=89}; {x=76; y=453};
+  ];;
+
+  let pqt_order_22 = pinsert_list [
+    {x=300; y=10}; {x=373; y=120}; {x=76; y=453};
+  ];;
+
+
+  (* print_string (string_of_pquadtree pqt_order_21_bis);;
+  print_string "\n\n\n";; *)
+  print_string (string_of_pquadtree pqt_order_21);;
+  print_string "\n\n\n";;
+  print_string (string_of_pquadtree pqt_order_22);;
 
   let screen_size = Printf.sprintf " %dx%d"
     ((config.base_length+20)*config.scale) ((config.base_length+20)*config.scale);;
@@ -105,7 +122,7 @@ let () =
     (* draw_rquadtree ~scale:config.scale config.base_length rqt1; *)
     (* draw_rquadtree ~scale:config.scale config.base_length (horizontal_symmetry rqt1); *)
 
-    draw_rcquadtree ~scale:config.scale qt;
+    draw_pquadtree ~scale:config.scale pqt_order_21;
 
     ignore (Graphics.read_key ());
   with

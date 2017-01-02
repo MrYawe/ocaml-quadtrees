@@ -19,6 +19,9 @@ let draw_point ?(scale=1) point =
     Graphics.moveto (point.x*scale) ((point.y-size)*scale);
     Graphics.lineto (point.x*scale) ((point.y+size)*scale);;
 
+let string_of_point point =
+  Printf.sprintf "{x=%d; y=%d}" point.x point.y;;
+
 (******************************************************************************)
 (*                              Rectangle                                     *)
 (******************************************************************************)
@@ -70,6 +73,13 @@ let get_pole_rect rect1 rect2 =
     else if rect1.left > c.x && rect1.top < c.y then SE
     else raise MedianCrossed;;
 
+let get_rect_at_pole pole rect =
+  let c = center rect in match pole with
+  | NO -> {top=rect.top; right=c.x; bottom=c.y; left=rect.left}
+  | NE -> {top=rect.top; right=rect.right; bottom=c.y; left=c.x}
+  | SO -> {top=c.y; right=c.x; bottom=rect.bottom; left=rect.left}
+  | SE -> {top=c.y; right=rect.right; bottom=rect.bottom; left=c.x};;
+
 (**
   True if the given rectangle contains the given point.
  *)
@@ -109,7 +119,6 @@ let string_of_rectangle_list li =
   let rect_strings = List.map string_of_rectangle li in
     let rect_strings = String.concat ";\n" rect_strings in
       Printf.sprintf "[\n%s\n]" rect_strings;;
-
 
 let draw_rectangle ?(scale=1) rect =
   Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
