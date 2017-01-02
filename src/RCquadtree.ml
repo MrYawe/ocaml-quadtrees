@@ -75,7 +75,6 @@ let rec rcinsert ?(surface = base_surface) rcquadtree rect =
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
     aux (RCNode (s, lv, lh, q1, q2, q3, q4));;
 
-(* TODO: fold_left because the order is inversed *)
 let rcinsert_list ?(surface = base_surface) rect_list =
   List.fold_left (rcinsert ~surface:surface) RCEmpty rect_list;;
 
