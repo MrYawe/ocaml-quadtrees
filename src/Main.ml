@@ -4,32 +4,52 @@ open Pquadtree;;
 open Rquadtree;;
 open RCquadtree;;
 open Graphics;;
+open String;;
 
-type config = { base_length:int; scale:int; };;
-type state = { mutable pos:int; max_pos:int; };;
+type state = { base_length:int; base_surface:rect; g_origin:point; scale:int;
+  margin:int; mutable pos:int; max_pos:int; };;
 
 exception End;;
 
+let new_state length scale margin =
+{
+  base_length=length;
+  base_surface={top=length; right=length; bottom=0; left=0};
+  g_origin={x=(margin*scale); y=(margin*scale)};
+  margin=margin;
+  scale=scale;
+  pos=0;
+  max_pos=1;
+};;
 
-let pquadtree_1 () =
-  let pqt = (pinsert (pinsert PEmpty {x=30; y=30}) {x=300; y=10}) in
-    draw_pquadtree pqt;;
+let g_state = new_state 512 2 50;;
 
-let pquadtree_2 () =
-  let pqt = pinsert_list [
+let pquadtree_1 s () =
+  let pqt =
+    (pinsert
+      (pinsert ~surface:s.base_surface PEmpty {x=30; y=30})
+      {x=300; y=10}) in
+    draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
+    draw_string "HELLO";
+    set_window_title
+      (Printf.sprintf "Pquadtree 1 (%d/%d)" (s.pos+1) (s.max_pos+1));;
+
+let pquadtree_2 s () =
+  let pqt = pinsert_list ~surface:s.base_surface [
     {x=300; y=10}; {x=373; y=120}; {x=76; y=453}; {x=201; y=89};
     {x=35; y=225}; {x=242; y=29}; {x=294; y=382}; {x=298; y=24};
     {x=455; y=202}; {x=292; y=292}; {x=293; y=509}; {x=132; y=395};
-  ] in draw_pquadtree pqt;;
+  ] in draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
+
+  let li = split_on_char '\n' (string_of_pquadtree pqt) in
+    draw_string (List.nth li 0);
+  set_window_title
+    (Printf.sprintf "Pquadtree 2 (%d/%d)" (s.pos+1) (s.max_pos+1));;
 
 let demo_list = [
-  pquadtree_1;
-  pquadtree_2;
+  (pquadtree_1 g_state);
+  (pquadtree_2 g_state);
 ]
-
-
-
-
 
 let skel f_init f_end f_key (*f_mouse*) f_except =
   f_init ();
@@ -48,33 +68,18 @@ let skel f_init f_end f_key (*f_mouse*) f_except =
   with
     End -> f_end ();;
 
-let f_init state () =
-  let config = {base_length=512; scale=2} in
+let f_init s () =
   let screen_size = Printf.sprintf " %dx%d"
-    ((config.base_length+20)*config.scale)
-    ((config.base_length+20)*config.scale) in
+    ((s.base_length+s.margin*2+400)*s.scale)
+    ((s.base_length+s.margin*2)*s.scale) in
 
-  Graphics.open_graph screen_size;
-  Graphics.set_window_title "Quadtrees";
-  Graphics.set_line_width config.scale;
-  (List.nth demo_list state.pos) ();;
+  open_graph screen_size;
+  set_line_width s.scale;
+  set_font "-*-fixed-medium-r-semicondensed--30-*-*-*-*-*-iso8859-1";
+  (List.nth demo_list s.pos) ();;
 
 let f_end state () =
   print_string "end";;
-
-(* let g_next state =
-  print_string "next ";
-  if (state.pos+1) >= state.pos_max then
-    state.pos <- (state.pos+1);
-    print_string (string_of_int state.pos);
-    print_string "\n";; *)
-
-(* let prev () =
-  print_string "prev ";
-  if (state.pos-1) >= 0 then
-    state.pos <- (state.pos-1);
-    print_string (string_of_int state.pos);
-    print_string "\n";; *)
 
 let f_key state c =
   print_string (string_of_int state.pos);
@@ -93,8 +98,6 @@ let f_key state c =
 
 let f_except state e =
   Printf.printf "%s\n" (Printexc.to_string e);;
-
-let g_state = {pos=0; max_pos=(List.length demo_list)-1};;
 
 let start () =
   skel (f_init g_state) (f_end g_state) (f_key g_state)

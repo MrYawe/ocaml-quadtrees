@@ -3,6 +3,8 @@ open Point;;
 type pole = NO | NE | SO | SE;;
 type rect = {top: int; bottom: int; left: int; right: int};;
 
+let base_g_origin = {x=0; y=0};;
+
 let rectangle_equal rect1 rect2 =
   match (rect1, rect2) with
   | (r1, r2) when r1.top=r2.top && r1.bottom=r2.bottom &&
@@ -96,9 +98,12 @@ let string_of_rectangle_list ?(indent=0) li =
     let rect_strings = String.concat (Printf.sprintf ";\n%s" i2) rect_strings in
       Printf.sprintf "\n%s[\n%s%s\n%s]" i i2 rect_strings i;;
 
-let draw_rectangle ?(scale=1) rect =
-  Graphics.draw_rect (rect.left*scale) (rect.bottom*scale)
-    ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);;
+let draw_rectangle ?(scale=1) ?(g_origin = base_g_origin) rect =
+  Graphics.draw_rect
+    ((rect.left*scale)+g_origin.x)
+    ((rect.bottom*scale)+g_origin.y)
+    ((rect.right-rect.left)*scale)
+    ((rect.top-rect.bottom)*scale);;
 
 let draw_median ?(scale=1) rect =
   let c = center rect in

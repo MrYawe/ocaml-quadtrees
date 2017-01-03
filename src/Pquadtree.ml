@@ -11,6 +11,7 @@ exception NoPathFound;;
 
 let base_length = 512;;
 let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
+let base_g_origin = {x=0; y=0};;
 
 (*
   On part du principe que si il se trouve sur la médiane verticale,
@@ -56,15 +57,15 @@ let rec pinsert ?(surface = base_surface) pquadtree point = match pquadtree with
 let rec pinsert_list ?(surface = base_surface) li =
   List.fold_left (pinsert ~surface: surface) PEmpty li;;
 
-let rec draw_pquadtree ?(scale=1) = function
+let rec draw_pquadtree ?(scale=1) ?(g_origin = base_g_origin) = function
   | PEmpty -> ()
   | PNode (p, r, q1, q2, q3, q4) ->
-    draw_point ~scale:scale p;
-    draw_rectangle ~scale:scale r;
-    draw_pquadtree ~scale:scale q1;
-    draw_pquadtree ~scale:scale q2;
-    draw_pquadtree ~scale:scale q3;
-    draw_pquadtree ~scale:scale q4;;
+    draw_point ~scale:scale ~g_origin:g_origin p;
+    draw_rectangle ~scale:scale ~g_origin:g_origin r;
+    draw_pquadtree ~scale:scale ~g_origin:g_origin q1;
+    draw_pquadtree ~scale:scale ~g_origin:g_origin q2;
+    draw_pquadtree ~scale:scale ~g_origin:g_origin q3;
+    draw_pquadtree ~scale:scale ~g_origin:g_origin q4;;
 
 let rec string_of_pquadtree ?(indent=0) = function
   | PEmpty -> "PEmpty"
