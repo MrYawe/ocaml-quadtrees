@@ -1,13 +1,15 @@
+(**
+  The type point and its operations are designed to represent a point in a
+  two-dimensional space.
+
+  Points are represented by a record type.
+ *)
+
 type point = {x: int; y: int};;
 exception InconsistentPoint;;
 exception MedianCrossed;;
 
 let base_g_origin = {x=0; y=0};;
-
-let point_equal p1 p2 =
-  match (p1, p2) with
-  | (p1, p2) when p1.x=p2.x && p1.y=p2.y -> true
-  | _ -> false;;
 
 let draw_point ?(scale=1) ?(g_origin = base_g_origin) point =
   let size = 3 in

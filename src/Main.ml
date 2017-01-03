@@ -41,8 +41,8 @@ let pquadtree_2 s () =
     {x=455; y=202}; {x=292; y=292}; {x=293; y=509}; {x=132; y=395};
   ] in draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
 
-  let li = split_on_char '\n' (string_of_pquadtree pqt) in
-    draw_string (List.nth li 0);
+  (* let li = split_on_char '\n' (string_of_pquadtree pqt) in
+    draw_string (List.nth li 0); *)
   set_window_title
     (Printf.sprintf "Pquadtree 2 (%d/%d)" (s.pos+1) (s.max_pos+1));;
 

@@ -28,7 +28,7 @@ let get_pquadtree_at_pole pole pquadtree = match pquadtree, pole with
 
 let rec pbelong point = function
   | PEmpty -> false
-  | PNode (p, _, _, _, _, _) when point_equal p point -> true
+  | PNode (p, _, _, _, _, _) when p=point -> true
   | PNode (p, r, q1, q2, q3, q4) ->
     let pole = get_pole point r in
       let pqt = get_pquadtree_at_pole pole (PNode (p, r, q1, q2, q3, q4)) in
@@ -37,7 +37,7 @@ let rec pbelong point = function
 let ppath point pquadtree =
   let rec aux acc point = function
   | PEmpty -> raise NoPathFound
-  | PNode (p, _, _, _, _, _) when point_equal p point -> []
+  | PNode (p, _, _, _, _, _) when p=point -> []
   | PNode (p, r, q1, q2, q3, q4) ->
     let pole = get_pole point r in
       aux (pole::acc) point
