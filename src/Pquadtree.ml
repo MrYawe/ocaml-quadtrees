@@ -19,7 +19,7 @@ open Rectangle;;
   Each [PNode] contains:
   {ul {- its surface represented by a {!type: Rectangle.rect}}
       {- its point represented by a {!type: Point.point}}
-      {- 4 childs {!type:Pquadtree.pquadtree}}}
+      {- 4 children {!type:Pquadtree.pquadtree}}}
  *)
 type pquadtree =
     PEmpty
@@ -64,7 +64,6 @@ let base_length = 512;;
  *)
 let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
 
-
 (**
   Return [true] if the given pquadtree is consistent and [false] otherwise.
 
@@ -83,7 +82,6 @@ let rec is_consistent = function
     (is_consistent q3) &&
     (is_consistent q4);;
 
-
 (**
   Return the child pquadtree corresponding to the given intercardinal directions
   of a {!type:Pquadtree.pquadtree.PNode}.
@@ -97,7 +95,6 @@ let get_pquadtree_at_pole pole pqt = match pqt, pole with
   | PNode (_, _, _, _, q3, _), SW -> q3
   | PNode (_, _, _, _, _, q4), SE -> q4
   | _ -> raise InconsistentPNode;;
-
 
 (**
   Return [true] if the given point is contained in the given pquadtree and
@@ -129,7 +126,6 @@ let ppath point pqt =
         (get_pquadtree_at_pole pole(PNode (p, r, q1, q2, q3, q4)))
   in List.rev (aux [] point pqt);;
 
-
 (**
   Insert the given point in the given pquadtree and return the new pquadtree.
 
@@ -141,6 +137,10 @@ let ppath point pqt =
 
   Raise [InconsistentPquadtree] if the given pquadtree is inconsistent. See
   {!val:Pquadtree.is_consistent}.
+
+  @param surface Optional parameter representing the surface of the first
+  [PNode] of a pquadtree. This parameter will be used if the given pquadtree
+  is [PEmpty]. Default is {!val:Pquadtree.base_surface}.
  *)
 let rec pinsert ?(surface = base_surface) pqt point =
   if not (rect_is_a_power_of_two surface) then raise InvalidSurface;
@@ -157,7 +157,7 @@ let rec pinsert ?(surface = base_surface) pqt point =
       | SE -> PNode (p, r, q1, q2, q3, (pinsert ~surface:new_rect q4 point)));;
 
 (**
-  Insert all given points in the given pquadtree and return
+  Insert all given points in a new pquadtree and return
   the new pquadtree.
 
   Raise [InvalidSurface] if the surface is invalid. See
@@ -168,13 +168,19 @@ let rec pinsert ?(surface = base_surface) pqt point =
 
   Raise [InconsistentPquadtree] if the given pquadtree is inconsistent. See
   {!val:Pquadtree.is_consistent}.
+
+  @param surface Optional parameter representing the surface of the first
+  [PNode] of a pquadtree. This parameter will be used if the given pquadtree
+  is [PEmpty]. Default is {!val:Pquadtree.base_surface}.
  *)
 let rec pinsert_list ?(surface = base_surface) li =
   List.fold_left (pinsert ~surface: surface) PEmpty li;;
 
-
 (**
   Return the string representation of the given pquadtree.
+
+  @param indent Optional parameter representing the number of spaces of
+  the indentation. Default is 0.
  *)
 let rec string_of_pquadtree ?(indent=0) pqt =
   if not (is_consistent pqt) then raise InconsistentPquadtree;
@@ -198,7 +204,6 @@ let rec string_of_pquadtree ?(indent=0) pqt =
  *)
 let base_g_origin = {x=0; y=0};;
 
-
 (**
   Draw the given pquadtree with the graphic module of OCaml.
 
@@ -209,7 +214,7 @@ let base_g_origin = {x=0; y=0};;
   of [20] pixels. Default is [1].
   @param g_origin Optional parameter representing the graphical origin of the
   coordinate system where the pquadtree is drawn. Default is
-  {!val:pquadtree.base_g_origin}.
+  {!val:Pquadtree.base_g_origin}.
  *)
 let rec draw_pquadtree ?(scale=1) ?(g_origin = base_g_origin) pqt =
   if not (is_consistent pqt) then raise InconsistentPquadtree;
