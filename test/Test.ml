@@ -1,13 +1,24 @@
 open OUnit2;;
 
-let () =
 
-  run_test_tt_main
-    ("TESTS">::: [
-      TestPoint.tests;
-      TestRectangle.tests;
-      TestPquadtree.tests;
-      TestRquadtree.tests;
-      TestRCquadtree.tests;
-   ]);
+let tests = [
+  "TESTS POINT">::: [
+    TestPoint.tests;
+  ];
+  "TESTS RECTANGLE">::: [
+    TestRectangle.tests;
+  ];
+  "TESTS PQUADTREE">::: [
+    TestPquadtree.tests;
+  ];
+  "TESTS RQUADTREE">::: [
+    TestRquadtree.tests;
+  ];
+  "TESTS RCQUADTREE">::: [
+    TestRCquadtree.tests;
+  ];
+];;
+
+let () =
+  List.iter run_test_tt_main tests;
 ;;

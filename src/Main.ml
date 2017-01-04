@@ -24,6 +24,10 @@ let new_state length scale margin =
 
 let g_state = new_state 512 2 50;;
 
+let draw_window_title s title =
+  set_window_title
+    (Printf.sprintf "%s (%d/%d)" title (s.pos+1) (s.max_pos+1));;
+
 let pquadtree_1 s () =
   let pqt =
     (pinsert
@@ -33,8 +37,7 @@ let pquadtree_1 s () =
       in
     draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
     (* draw_string "HELLO"; *)
-    set_window_title
-      (Printf.sprintf "Pquadtree 1 (%d/%d)" (s.pos+1) (s.max_pos+1));;
+    draw_window_title s "Pquadtree 1";;
 
 let pquadtree_2 s () =
   let pqt = pinsert_list ~surface:s.base_surface [
@@ -45,8 +48,7 @@ let pquadtree_2 s () =
 
   (* let li = split_on_char '\n' (string_of_pquadtree pqt) in
     draw_string (List.nth li 0); *)
-  set_window_title
-    (Printf.sprintf "Pquadtree 2 (%d/%d)" (s.pos+1) (s.max_pos+1));;
+  draw_window_title s "Pquadtree 2";;
 
 let demo_list = [
   (pquadtree_1 g_state);

@@ -137,7 +137,6 @@ let test_decode test_ctxt =
   assert_equal rqt_decode_1_res (decode list_decode_1);;
   assert_raises InconsistentEncoding (fun _ -> decode list_decode_2);;
 
-(* Name the test cases and group them together *)
 let tests =
 "tests">::: [
   "test_intersection">:: test_intersection;
