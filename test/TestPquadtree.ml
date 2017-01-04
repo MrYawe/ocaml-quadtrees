@@ -51,7 +51,7 @@ let test_pinsert test_ctxt =
 
 (******************************************************************************)
 (*                             Test order                                     *)
-(* Proves that the shape of a paquadtree depend of the of the point's         *)
+(* Proves that the shape of a pquadtree depend of the of the point's         *)
 (* pinsertion order.                                                          *)
 (******************************************************************************)
 

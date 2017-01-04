@@ -55,9 +55,9 @@ let rec rcinsert ?(surface = base_surface) rcquadtree rect =
     | RCNode (s, lv, lh, q1, q2, q3, q4) ->
       let c = center s in (
         match (get_pole_rect rect s) with
-        | NO -> RCNode (s, lv, lh, (rcinsert ~surface:{top=s.top; right=c.x; bottom=c.y; left=s.left} q1 rect), q2, q3, q4)
+        | NW -> RCNode (s, lv, lh, (rcinsert ~surface:{top=s.top; right=c.x; bottom=c.y; left=s.left} q1 rect), q2, q3, q4)
         | NE -> RCNode (s, lv, lh, q1, (rcinsert ~surface:{top=s.top; right=s.right; bottom=c.y; left=c.x} q2 rect), q3, q4)
-        | SO -> RCNode (s, lv, lh, q1, q2, (rcinsert ~surface:{top=c.y; right=c.x; bottom=s.bottom; left=s.left} q3 rect), q4)
+        | SW -> RCNode (s, lv, lh, q1, q2, (rcinsert ~surface:{top=c.y; right=c.x; bottom=s.bottom; left=s.left} q3 rect), q4)
         | SE -> RCNode (s, lv, lh, q1, q2, q3, (rcinsert ~surface:{top=c.y; right=s.right; bottom=s.bottom; left=c.x} q4 rect))
       )
     | _ -> raise InconsistentRCNode
@@ -84,9 +84,9 @@ let rccontain rcquadtree p =
     | RCNode (s, lv, lh, q1, q2, q3, q4) ->
       let res = contain_in_list p (lv@lh) in (
         match (get_pole p s) with
-        | NO -> aux (res@acc) q1
+        | NW -> aux (res@acc) q1
         | NE -> aux (res@acc) q2
-        | SO -> aux (res@acc) q3
+        | SW -> aux (res@acc) q3
         | SE -> aux (res@acc) q4
       )
   in aux [] rcquadtree;;
