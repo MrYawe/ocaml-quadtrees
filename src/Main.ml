@@ -15,7 +15,7 @@ let new_state length scale margin =
 {
   base_length=length;
   base_surface={top=length; right=length; bottom=0; left=0};
-  g_origin={x=(margin*scale); y=(margin*scale)};
+  g_origin={x=margin; y=margin};
   margin=margin;
   scale=scale;
   pos=0;
@@ -27,10 +27,12 @@ let g_state = new_state 512 2 50;;
 let pquadtree_1 s () =
   let pqt =
     (pinsert
-      (pinsert ~surface:s.base_surface PEmpty {x=30; y=30})
-      {x=300; y=10}) in
+      (pinsert ~surface:s.base_surface PEmpty {x=512; y=100})
+      {x=300; y=10})
+      (* pinsert (pinsert ~surface:{top=2; right=2; bottom=0; left=0} PEmpty {x=2; y=2}) {x=0; y=0} *)
+      in
     draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
-    draw_string "HELLO";
+    (* draw_string "HELLO"; *)
     set_window_title
       (Printf.sprintf "Pquadtree 1 (%d/%d)" (s.pos+1) (s.max_pos+1));;
 
@@ -74,7 +76,7 @@ let f_init s () =
     ((s.base_length+s.margin*2)*s.scale) in
 
   open_graph screen_size;
-  set_line_width s.scale;
+  set_line_width 2;
   set_font "-*-fixed-medium-r-semicondensed--30-*-*-*-*-*-iso8859-1";
   (List.nth demo_list s.pos) ();;
 

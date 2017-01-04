@@ -35,8 +35,19 @@ PNode (
 );;
 
 let test_pinsert test_ctxt =
-  assert_equal pqdt2 pqdt2_result;;
+  assert_equal pqdt2 pqdt2_result;
 
+  (* When the point to insert is out of the main surface of the pquadtree     *)
+  (* it should raise a PointOutOfRange exception.                             *)
+  assert_raises
+    PointOutOfRange
+    (fun _ -> (pinsert PEmpty {x=base_length+1; y=base_length}));
+  assert_raises
+    PointOutOfRange
+    (fun _ -> (pinsert PEmpty {x=base_length; y=base_length+1}));
+  assert_raises
+    PointOutOfRange
+    (fun _ -> (pinsert PEmpty {x=base_length+1; y=base_length+1}));;
 
 (******************************************************************************)
 (*                             Test order                                     *)

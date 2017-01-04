@@ -1,34 +1,78 @@
+(**
+  Rectangle
+
+  @author Yannis Weishaupt
+ *)
+
 open Point;;
 
 type pole = NO | NE | SO | SE;;
 type rect = {top: int; bottom: int; left: int; right: int};;
 
+exception Inconsistent_Rectangle;;
+
 let base_g_origin = {x=0; y=0};;
 
-let rectangle_equal rect1 rect2 =
-  match (rect1, rect2) with
-  | (r1, r2) when r1.top=r2.top && r1.bottom=r2.bottom &&
-                r1.left=r2.left && r1.right=r2.right -> true
-  | _ -> false;;
+(**
+  Return [true] if the given rectangle is consistent.
 
-let rec rectangle_list_equal list1 list2 =
-  match (list1, list2) with
-  | [], [] -> true
-  | r1::l1, r2::l2 when rectangle_equal r1 r2 -> rectangle_list_equal l1 l2
-  | _ -> false;;
+  A consistent rectangle is a rectangle with a width and a height strictly
+  positive.
+ *)
+let is_consistent rect =
+  let w = (rect.right-rect.left)/2
+  and h = (rect.top-rect.bottom)/2 in
+    (w > 0) && (h > 0);;
 
+(**
+  Return the width of the given rectangle.
 
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+ *)
+let width rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
+  rect.right-rect.left;;
+
+(**
+  Return the height of the given rectangle.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+ *)
+let height rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
+  rect.top-rect.bottom;;
+
+(**
+  Return [true] if the width and the height of the rectangle are
+  a power of two. Return [false] otherwise.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+ *)
+let rect_is_a_power_of_two rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
+  let w = width rect and h = height rect in
+    ((w land (w - 1)) == 0) && ((h land (h - 1)) == 0);;
+
+(**
+  Return the center of the given rectangle.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+ *)
 let center rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   {
-    x=(rect.right-rect.left)/2+rect.left;
-    y=(rect.top-rect.bottom)/2+rect.bottom
+    x=(width rect)/2+rect.left;
+    y=(height rect)/2+rect.bottom
   };;
 
 (**
   Return the pole depending on the position of the given point against
   the given rectangle.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
  *)
 let get_pole point rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   let c = center rect in
     if point.x < c.x && point.y >= c.y then NO
     else if point.x >= c.x && point.y >= c.y then NE
@@ -38,10 +82,14 @@ let get_pole point rect =
 
 (**
   Return the pole depending on the position of the first rectangle against
-  the second rectangle. Raise an error if the first rectangle cross a median
+  the second rectangle. Raise an error if the first rectangle crosses a median
   of the second rectangle.
+
+  Raise [Inconsistent_Rectangle] if one of the given rectangles is inconsistent.
  *)
 let get_pole_rect rect1 rect2 =
+  if not (is_consistent rect1) then raise Inconsistent_Rectangle;
+  if not (is_consistent rect2) then raise Inconsistent_Rectangle;
   let c = center rect2 in
     if rect1.right < c.x && rect1.bottom > c.y then NO
     else if rect1.left > c.x && rect1.bottom > c.y then NE
@@ -49,7 +97,13 @@ let get_pole_rect rect1 rect2 =
     else if rect1.left > c.x && rect1.top < c.y then SE
     else raise MedianCrossed;;
 
+(**
+  Return the rectangle at the given pole of the given rectangle.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+ *)
 let get_rect_at_pole pole rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   let c = center rect in match pole with
   | NO -> {top=rect.top; right=c.x; bottom=c.y; left=rect.left}
   | NE -> {top=rect.top; right=rect.right; bottom=c.y; left=c.x}
@@ -57,40 +111,58 @@ let get_rect_at_pole pole rect =
   | SE -> {top=c.y; right=rect.right; bottom=rect.bottom; left=c.x};;
 
 (**
-  True if the given rectangle contains the given point.
+  Return [true] if the given rectangle contains the given point.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
  *)
-let contain point rect =
+let contain_point point rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   point.x >= rect.left && point.x <= rect.right &&
   point.y >= rect.bottom && point.y <= rect.top;;
 
 (**
-  Return all rectangles given in the rectangle list that contain the given point
+  Return all rectangles given in the rectangles list that contain the
+  given point.
+
+  Raise [Inconsistent_Rectangle] if one of the given rectangles is inconsistent.
  *)
 let contain_in_list point li =
   List.fold_left
-    (fun acc r -> if contain point r then (r::acc) else acc) [] li;;
+    (fun acc r -> if contain_point point r then (r::acc) else acc) [] li;;
 
 (**
-  True if the vertical median of the first rectangle cross the second
+  Return [true] if the vertical median of the first rectangle crosses the second
   rectangle.
+
+  Raise [Inconsistent_Rectangle] if one of the given rectangles is inconsistent.
  *)
 let vertical_median_cross rect1 rect2 =
+  if not (is_consistent rect1) then raise Inconsistent_Rectangle;
   let c = center rect1 in
     rect2.left <= c.x && c.x <= rect2.right;;
 
 (**
-  True if the horizontal median of the first rectangle cross the second
-  rectangle.
+  Return [true] if the horizontal median of the first given rectangle crosses
+  the second given rectangle.
+
+  Raise [Inconsistent_Rectangle] if one of the given rectangles is inconsistent.
  *)
 let horizontal_median_cross rect1 rect2 =
+  if not (is_consistent rect2) then raise Inconsistent_Rectangle;
   let c = center rect1 in
     rect2.bottom <= c.y && c.y <= rect2.top;;
 
+(**
+  Return the string representation of the given rectangle.
+ *)
 let string_of_rectangle rect =
   Printf.sprintf
     "{top=%d; bottom=%d; left=%d; right=%d}"
     rect.top rect.bottom rect.left rect.right;;
 
+(**
+  Return the string representation of the given rectangles list.
+ *)
 let string_of_rectangle_list ?(indent=0) li =
   let rect_strings = List.map string_of_rectangle li and
   i = String.make indent ' ' and
@@ -98,22 +170,65 @@ let string_of_rectangle_list ?(indent=0) li =
     let rect_strings = String.concat (Printf.sprintf ";\n%s" i2) rect_strings in
       Printf.sprintf "\n%s[\n%s%s\n%s]" i i2 rect_strings i;;
 
+(**
+  Draw the given rectangle with the graphic module of OCaml.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+
+  @param scale Optional scaling parameter. For example if [scale = 2] a
+  rectangle with a height of [10] will be drawn with a height of [20] pixels.
+  Default is [1].
+  @param g_origin Optional parameter representing the graphical origin of the
+  coordinate system where the rectangle is drawn. Default is
+  [base_g_origin = {x=0; y=0}].
+ *)
 let draw_rectangle ?(scale=1) ?(g_origin = base_g_origin) rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   Graphics.draw_rect
-    ((rect.left*scale)+g_origin.x)
-    ((rect.bottom*scale)+g_origin.y)
-    ((rect.right-rect.left)*scale)
-    ((rect.top-rect.bottom)*scale);;
+    ((rect.left+g_origin.x)*scale)
+    ((rect.bottom+g_origin.y)*scale)
+    ((width rect)*scale)
+    ((height rect)*scale);;
 
-let draw_median ?(scale=1) rect =
-  let c = center rect in
-    Graphics.moveto (c.x*scale) (rect.bottom*scale);
-    Graphics.lineto (c.x*scale) (rect.top*scale);
-    Graphics.moveto (rect.left*scale) (c.y*scale);
-    Graphics.lineto (rect.right*scale) (c.y*scale);;
+(**
+  Draw the given rectangle filled by the given color
+  with the graphic module of OCaml.
 
-let draw_plain_rectangle ?(scale=1) rect color =
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+
+  @param scale Optional scaling parameter. For example if [scale = 2] a
+  rectangle with a height of [10] will be drawn with a height of [20] pixels.
+  Default is [1].
+  @param g_origin Optional parameter representing the graphical origin of the
+  coordinate system where the rectangle is drawn. Default is
+  [base_g_origin = {x=0; y=0}].
+ *)
+let draw_plain_rectangle ?(scale=1) ?(g_origin = base_g_origin) rect color =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
   Graphics.set_color color;
-  Graphics.fill_rect (rect.left*scale) (rect.bottom*scale)
-    ((rect.right-rect.left)*scale) ((rect.top-rect.bottom)*scale);
+  Graphics.fill_rect
+    ((rect.left+g_origin.x)*scale)
+    ((rect.bottom+g_origin.y)*scale)
+    ((width rect)*scale)
+    ((height rect)*scale);
   Graphics.set_color Graphics.black;;
+
+(**
+  Draw the medians of the given rectangle with the graphic module of OCaml.
+
+  Raise [Inconsistent_Rectangle] if the given rectangle is inconsistent.
+
+  @param scale Optional scaling parameter. For example if [scale = 2] a
+  rectangle with a height of [10] will be drawn with a vertical median of
+  [20] pixels. Default is [1].
+  @param g_origin Optional parameter representing the graphical origin of the
+  coordinate system where the medians are drawn. Default is
+  [base_g_origin = {x=0; y=0}].
+ *)
+let draw_medians ?(scale=1) ?(g_origin = base_g_origin) rect =
+  if not (is_consistent rect) then raise Inconsistent_Rectangle;
+  let c = center rect in
+    Graphics.moveto ((c.x+g_origin.x)*scale) ((rect.bottom+g_origin.y)*scale);
+    Graphics.lineto ((c.x+g_origin.x)*scale) ((rect.top+g_origin.y)*scale);
+    Graphics.moveto ((rect.left+g_origin.x)*scale) ((c.y+g_origin.y)*scale);
+    Graphics.lineto ((rect.right+g_origin.x)*scale) ((c.y+g_origin.y)*scale);;
