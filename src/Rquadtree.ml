@@ -14,21 +14,21 @@ open Rectangle;;
 (**
   The sum type representing the possible colors of a empty rquadtree.
  *)
-type colors = White | Black ;;*
+type colors = White | Black ;;
 
 (**
   The sum type representing the region quadtree with:
   {ul {- [Plain] the empty rquadtree that will be drawn in black or white}
       {- [RQ] a node of the rquadtree}}
 
-  Each [RQ] contains 4 children of {!type:RCquadtree.rcquadtree}.
+  Each [RQ] contains 4 children of {!type:Rquadtree.rquadtree}.
  *)
 type rquadtree =
     Plain of colors
   | RQ of rquadtree * rquadtree * rquadtree * rquadtree;;
 
 (**
-  Exception raised when a given encoded rcquadtree is inconsistent.
+  Exception raised when a given encoded rquadtree is inconsistent.
  *)
 exception InconsistentEncoding;;
 
@@ -43,6 +43,9 @@ let rec invert = function
 
 (**
   Return the rquadtree result of the intersection of two given rquadtree.
+
+  If one pixel of the intersection rquadtree is black then this pixel is black
+  in the first and the second given rquadtree.
  *)
 let rec intersection rquadtree1 rquadtree2 =
   match (rquadtree1, rquadtree2) with
@@ -55,6 +58,12 @@ let rec intersection rquadtree1 rquadtree2 =
     | (Plain Black, Plain Black) -> Plain Black
     | _ -> Plain White;;
 
+(**
+  Return the rquadtree result of the union of two given rquadtree.
+
+  If one pixel of the union rquadtree is black then this pixel is black
+  in the first or the second given rquadtree.
+ *)
 let rec union rquadtree1 rquadtree2 =
   match (rquadtree1, rquadtree2) with
     | (RQ (q11, q12, q13, q14), RQ (q21, q22, q23, q24)) ->
@@ -68,18 +77,33 @@ let rec union rquadtree1 rquadtree2 =
     | (Plain White, Plain White) -> Plain White
     | _ -> Plain Black;;
 
+(**
+  Perform a vertical symmetry on the given rquadtree and return
+  the resulting rquadtree.
+
+  The axis of symmetry is the right border of the rquadtree.
+ *)
 let rec vertical_symmetry = function
   | Plain c -> Plain c
   | RQ (q1, q2, q3, q4) ->
     RQ (vertical_symmetry q2, vertical_symmetry q1,
       vertical_symmetry q4, vertical_symmetry q3);;
 
+(**
+  Perform a horizontal symmetry on the given rquadtree and return
+  the resulting rquadtree.
+
+  The axis of symmetry is the bottom border of the rquadtree.
+ *)
 let rec horizontal_symmetry = function
   | Plain c -> Plain c
   | RQ (q1, q2, q3, q4) ->
     RQ (vertical_symmetry q3, vertical_symmetry q4,
       vertical_symmetry q1, vertical_symmetry q2);;
 
+(**
+  Return the binary encoding of the given rquadtree as list of [O] or [1].
+ *)
 let code rquadtree =
   let rec code_step acc = function
     | Plain White -> 1::0::acc
@@ -88,6 +112,11 @@ let code rquadtree =
       0::(code_step (code_step (code_step (code_step acc q4) q3) q2) q1)
   in code_step [] rquadtree;;
 
+(**
+  Decode the given rquadtree encoding and return the resulting rquadtree.
+
+  Raise [InconsistentEncoding] if the given encoding is inconsistent.
+ *)
 let decode l =
   let rec decode_step = function
     | 1::0::l -> Plain White, l
@@ -101,6 +130,27 @@ let decode l =
     | _ -> raise InconsistentEncoding
   in let rqt, _ = decode_step l in rqt;;
 
+(**
+  The default graphical origin used by draw functions of this module.
+
+  Its value is [{x=0; y=0}].
+ *)
+let base_g_origin = {x=0; y=0};;
+
+(**
+  Draw the given rquadtree with the graphic module of OCaml.
+
+  TODO
+  Raise [InconsistentRquadtree] if the given rquadtree is inconsistent.
+
+  @param scale Optional scaling parameter. For example if [scale = 2] a
+  rquadtree's surface of height [10] will be drawn with a height
+  of [20] pixels. Default is [1].
+  TODO
+  @param g_origin Optional parameter representing the graphical origin of the
+  coordinate system where the rquadtree is drawn. Default is
+  {!val:Rquadtree.base_g_origin}.
+ *)
 let draw_rquadtree ?(scale=1) base_size rquadtree =
   let rec aux scale rect = function
     | Plain White ->

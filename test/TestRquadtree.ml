@@ -28,9 +28,7 @@ let rqt_inter_result = RQ (
 );;
 
 let test_intersection test_ctxt =
-  assert_equal
-    (rquadtree_equal rqt_inter_result (intersection rqt_inter_1 rqt_inter_2))
-    true;;
+  assert_equal rqt_inter_result (intersection rqt_inter_1 rqt_inter_2);;
 
 
 
@@ -59,9 +57,7 @@ let rqt_union_result = RQ (
 );;
 
 let test_union test_ctxt =
-  assert_equal
-    (rquadtree_equal rqt_union_result (union rqt_union_1 rqt_union_2))
-    true;;
+  assert_equal rqt_union_result (union rqt_union_1 rqt_union_2);;
 
 (******************************************************************************)
 (*                         Test vertical_symmetry                             *)
@@ -82,9 +78,7 @@ let rqt_vsymme_result_1 = RQ (
 );;
 
 let test_vertical_symmetry test_ctxt =
-  assert_equal
-    (rquadtree_equal rqt_vsymme_result_1 (vertical_symmetry rqt_vsymme_1))
-    true;;
+  assert_equal rqt_vsymme_result_1 (vertical_symmetry rqt_vsymme_1);;
 
 
 (******************************************************************************)
@@ -106,9 +100,7 @@ let rqt_hsymme_result_1 = RQ (
 );;
 
 let test_horizontal_symmetry test_ctxt =
-  assert_equal
-    (rquadtree_equal rqt_hsymme_result_1 (horizontal_symmetry rqt_hsymme_1))
-    true;;
+  assert_equal rqt_hsymme_result_1 (horizontal_symmetry rqt_hsymme_1);;
 
 (******************************************************************************)
 (*                               Test code                                    *)
@@ -142,7 +134,7 @@ let rqt_decode_1_res = RQ (
 let list_decode_2 = [0; 1;0; 1;1;0; 0;0;1;0;1;1;0;1;0; 1;1];;
 
 let test_decode test_ctxt =
-  assert_equal (rquadtree_equal rqt_decode_1_res (decode list_decode_1)) true;;
+  assert_equal rqt_decode_1_res (decode list_decode_1);;
   assert_raises InconsistentEncoding (fun _ -> decode list_decode_2);;
 
 (* Name the test cases and group them together *)
