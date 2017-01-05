@@ -1,12 +1,16 @@
-# ensiie-projet-ocaml
+# ocaml-quadtrees
 
-## Installation
-`$ make`
-`$ ./Main.native`
+## Installing
+`$ ocaml setup.ml -configure`                                     
+`$ ocaml setup.ml -build`                                                                                                       
+`$ ocaml setup.ml -install`                                                     
 
-## Tests
-`$ make test`
+## Uninstalling
+`$ ocaml setup.ml -uninstall`                                                           
 
-## Development
-### Makefile
-`$ oasis setup -setup-update dynamic`
+## Run the demo program
+`$ make`                                                                          
+`$ ./Demo.native`                                                                       
+
+## Run tests
+`$ make test`                                                             
