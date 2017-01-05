@@ -13,4 +13,6 @@
 `$ ./Demo.native`                                                                       
 
 ## Run tests
+You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) intalled.
+
 `$ make test`                                                             
