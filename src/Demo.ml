@@ -11,6 +11,12 @@ type state = { base_length:int; base_surface:rect; g_origin:point; scale:int;
 
 exception End;;
 
+let get_scale () =
+  try
+    int_of_string (Sys.getenv "SCALE")
+  with
+    | e -> 1;;
+
 let new_state length scale margin =
 {
   base_length=length;
@@ -22,7 +28,7 @@ let new_state length scale margin =
   max_pos=10;
 };;
 
-let g_state = new_state 512 2 100;;
+let g_state = new_state 512 (get_scale ()) 100;;
 
 let draw_window_title s title =
   set_window_title
