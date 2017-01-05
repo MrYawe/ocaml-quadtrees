@@ -1,12 +1,22 @@
-# ensiie-projet-ocaml
+# ocaml-quadtrees
 
-## Installation
-`$ make`
-`$ ./Main.native`
+## Documentation
+You can find the documentation [here](https://mryawe.github.io/ocaml/quadtrees/).
 
-## Tests
-`$ make test`
+## Installing
+`$ ocaml setup.ml -configure`                                     
+`$ ocaml setup.ml -build`                                                                                                       
+`$ ocaml setup.ml -install`                                                     
 
-## Development
-### Makefile
-`$ oasis setup -setup-update dynamic`
+## Uninstalling
+`$ ocaml setup.ml -uninstall`                                                           
+
+## Run the demo program
+`$ make`                                                                          
+`$ ./Demo.native`         
+The program can be `Demo.byte` if the native build is not available on your computer.                                
+
+## Run tests
+You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) intalled.
+
+`$ make test`                                                             
