@@ -13,7 +13,8 @@ You can find the documentation [here](https://mryawe.github.io/ocaml/quadtrees/)
 
 ## Run the demo program
 `$ make`                                                                          
-`$ ./Demo.native`                                                                       
+`$ ./Demo.native`         
+It can be ./Demo.byte if the native build is not available on your computer.                                
 
 ## Run tests
 You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) intalled.
