@@ -2,12 +2,6 @@ open OUnit2;;
 
 
 let tests = [
-  "TESTS POINT">::: [
-    TestPoint.tests;
-  ];
-  "TESTS RECTANGLE">::: [
-    TestRectangle.tests;
-  ];
   "TESTS PQUADTREE">::: [
     TestPquadtree.tests;
   ];

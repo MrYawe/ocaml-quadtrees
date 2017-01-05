@@ -18,9 +18,10 @@ Library "quadtrees"
   CompiledObject: best
   BuildDepends: graphics
 
-Executable "main"
+Executable "demo-quadtrees"
   Path: src
-  MainIs: Main.ml
+  Install: false
+  MainIs: Demo.ml
   CompiledObject: best
   BuildDepends: quadtrees
 
@@ -30,7 +31,8 @@ Executable "main"
 
 Library "test-quadtrees"
   Path: test
-  Modules: TestPoint, TestRectangle, TestPquadtree, TestRquadtree, TestRCquadtree
+  Modules: TestPquadtree, TestRquadtree, TestRCquadtree
+  Install: false
   CompiledObject: best
   BuildDepends: quadtrees
 

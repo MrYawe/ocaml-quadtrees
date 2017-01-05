@@ -32,6 +32,19 @@ type rquadtree =
  *)
 exception InconsistentEncoding;;
 
+(**
+  The default width and height of the surface of a rquadtree.
+
+  Its value is [512].
+ *)
+let base_length = 512;;
+
+(**
+  The default default surface of a rquadtree.
+
+  Its value is [{top=base_length; right=base_length; bottom=0; left=0}].
+ *)
+let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
 
 (**
   Invert the color of each [Plain] in the given rquadtree.
@@ -118,17 +131,17 @@ let encode rquadtree =
   Raise [InconsistentEncoding] if the given encoding is inconsistent.
  *)
 let decode l =
-  let rec decode_step = function
+  let rec aux = function
     | 1::0::l -> Plain White, l
     | 1::1::l -> Plain Black, l
     | 0::l ->
-      let q1, l = decode_step l in
-      let q2, l = decode_step l in
-      let q3, l = decode_step l in
-      let q4, l = decode_step l in
+      let q1, l = aux l in
+      let q2, l = aux l in
+      let q3, l = aux l in
+      let q4, l = aux l in
         RQ (q1, q2, q3, q4), l
     | _ -> raise InconsistentEncoding
-  in let rqt, _ = decode_step l in rqt;;
+  in let rqt, _ = aux l in rqt;;
 
 (**
   Return the string representation of the given rquadtree encoding.
@@ -166,29 +179,33 @@ let base_g_origin = {x=0; y=0};;
 (**
   Draw the given rquadtree with the graphic module of OCaml.
 
-  TODO
-  Raise [InconsistentRquadtree] if the given rquadtree is inconsistent.
-
   @param scale Optional scaling parameter. For example if [scale = 2] a
   rquadtree's surface of height [10] will be drawn with a height
   of [20] pixels. Default is [1].
-  TODO
+
   @param g_origin Optional parameter representing the graphical origin of the
   coordinate system where the rquadtree is drawn. Default is
   {!val:Rquadtree.base_g_origin}.
+
+  @param surface Optional parameter representing the surface of the first
+  [RQ] of a pquadtree. Default is {!val:Rquadtree.base_surface}.
  *)
-let draw_rquadtree ?(scale=1) base_size rquadtree =
-  let rec aux scale rect = function
+let rec draw_rquadtree ?(scale=1) ?(g_origin = base_g_origin)
+  ?(surface = base_surface) = function
     | Plain White ->
-      draw_plain_rectangle ~scale:scale rect Graphics.white;
-      draw_rectangle ~scale:scale rect
+      draw_plain_rectangle ~scale:scale surface ~g_origin:g_origin
+        Graphics.white;
+      draw_rectangle ~scale:scale ~g_origin:g_origin surface
     | Plain Black ->
-      draw_plain_rectangle ~scale:scale rect Graphics.black;
-      draw_rectangle ~scale:scale rect
+      draw_plain_rectangle ~scale:scale surface ~g_origin:g_origin
+        Graphics.black;
+      draw_rectangle ~scale:scale ~g_origin:g_origin surface
     | RQ (q1, q2, q3, q4) ->
-      let c = center rect in
-        aux scale {top=rect.top; right=c.x; bottom=c.y; left=rect.left} q1;
-        aux scale {top=rect.top; right=rect.right; bottom=c.y; left=c.x} q2;
-        aux scale {top=c.y; right=c.x; bottom=rect.bottom; left=rect.left} q3;
-        aux scale {top=c.y; right=rect.right; bottom=rect.bottom; left=c.x} q4;
-  in aux scale {top=base_size; right=base_size; bottom=0; left=0} rquadtree;;
+      draw_rquadtree ~scale:scale ~g_origin:g_origin
+        ~surface:(get_rect_at_pole NW surface) q1;
+      draw_rquadtree ~scale:scale ~g_origin:g_origin
+        ~surface:(get_rect_at_pole NE surface) q2;
+      draw_rquadtree ~scale:scale ~g_origin:g_origin
+        ~surface:(get_rect_at_pole SW surface) q3;
+      draw_rquadtree ~scale:scale ~g_origin:g_origin
+        ~surface:(get_rect_at_pole SE surface) q4;;

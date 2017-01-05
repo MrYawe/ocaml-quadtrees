@@ -148,20 +148,6 @@ let rcinsert_res = [
       RCEmpty, RCEmpty, RCEmpty, RCEmpty
     )
   );
-
-  (* RCNode(
-    bs,
-    [], [],
-    RCEmpty,
-    RCEmpty,
-    RCNode(
-      {top=(bs.top/2); bottom=bs.bottom; left=bs.left; right=(bs.right/2)},
-      [{top=100; bottom=10; left=100; right=200}], [],
-      RCEmpty, RCEmpty, RCEmpty, RCEmpty
-    ),
-    RCEmpty
-  ); *)
-
 ]
 
 let test_rcinsert test_ctxt =

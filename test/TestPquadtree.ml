@@ -47,7 +47,18 @@ let test_pinsert test_ctxt =
     (fun _ -> (pinsert PEmpty {x=base_length; y=base_length+1}));
   assert_raises
     PointOutOfRange
-    (fun _ -> (pinsert PEmpty {x=base_length+1; y=base_length+1}));;
+    (fun _ -> (pinsert PEmpty {x=base_length+1; y=base_length+1}));
+
+  (* When the width or the height of the surface to insert is not a power     *)
+  (* of two  it should raise a InvalidSurface exception.                      *)
+  assert_raises InvalidSurface
+    (fun _ -> (pinsert ~surface:{top=500; right=500; bottom=0; left=0}
+      PEmpty {x=1; y=1}));
+  assert_raises InvalidSurface
+    (fun _ -> (pinsert ~surface:{top=189; right=189; bottom=0; left=0}
+      PEmpty {x=1; y=1}));;
+
+
 
 (******************************************************************************)
 (*                             Test order                                     *)

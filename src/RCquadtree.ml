@@ -30,13 +30,6 @@ type rcquadtree =
       rcquadtree * rcquadtree * rcquadtree * rcquadtree;;
 
 (**
-  Exception raised when a given rcquadtree is inconsistent.
-
-  See {!val:RCquadtree.is_consistent}.
- *)
-exception InconsistentRCquadtree;;
-
-(**
   Exception raised when a given [RCNode] is inconsistent.
  *)
 exception InconsistentRCNode;;
@@ -58,18 +51,6 @@ let base_surface = {top=base_length; right=base_length; bottom=0; left=0};;
 (**
   Insert the given rectangle in the given rcquadtree and return
   the new rcquadtree.
-
-  TODO
-  Raise [InvalidSurface] if the surface is invalid. See
-  {!exception:RCquadtree.InvalidSurface}.
-
-  TODO
-  Raise [RectangleOutOfRange] if the given rectangle if out of range of the
-  given rcquadtree.
-
-  TODO
-  Raise [InconsistentRCquadtree] if the given rcquadtree is inconsistent. See
-  {!val:RCquadtree.is_consistent}.
 
   @param surface Optional parameter representing the surface of the first
   [RCNode] of a rcquadtree. This parameter will be used if the given rcquadtree
@@ -104,26 +85,17 @@ let rec rcinsert ?(surface = base_surface) rcquadtree rect =
   Insert all given points in a new rcquadtree and return
   the new rcquadtree.
 
-  TODO
-  Raise [InvalidSurface] if the surface is invalid. See
-  {!exception:RCquadtree.InvalidSurface}.
-
-  TODO
-  Raise [PointOutOfRange] if the given point if out of range of the given
-  rcquadtree.
-
-  TODO
-  Raise [InconsistentPquadtree] if the given rcquadtree is inconsistent. See
-  {!val:RCquadtree.is_consistent}.
-
   @param surface Optional parameter representing the surface of the first
   [RCNode] of a rcquadtree. This parameter will be used if the given rcquadtree
   is [RCEmpty]. Default is {!val:RCquadtree.base_surface}.
  *)
 let rcinsert_list ?(surface = base_surface) rect_list =
   List.fold_left (rcinsert ~surface:surface) RCEmpty rect_list;;
-  
-(* TODO *)
+
+(**
+  Return the list of rectangles belonging to the given rcquadtree containing
+  the given point.
+ *)
 let rccontain rcquadtree p =
   let rec aux acc = function
     | RCEmpty -> acc
@@ -168,26 +140,24 @@ let base_g_origin = {x=0; y=0};;
 (**
   Draw the given rcquadtree with the graphic module of OCaml.
 
-  Raise [InconsistentRCquadtree] if the given rcquadtree is inconsistent.
-
   @param scale Optional scaling parameter. For example if [scale = 2] a
   rcquadtree's surface of height [10] will be drawn with a height
   of [20] pixels. Default is [1].
-  TODO
+
   @param g_origin Optional parameter representing the graphical origin of the
   coordinate system where the rcquadtree is drawn. Default is
   {!val:RCquadtree.base_g_origin}.
  *)
-let rec draw_rcquadtree ?(scale=1)  = function
+let rec draw_rcquadtree ?(scale=1) ?(g_origin = base_g_origin) = function
   | RCEmpty -> ()
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
-    draw_rectangle ~scale:scale s;
-    draw_medians ~scale:scale s;
+    draw_rectangle ~scale:scale ~g_origin:g_origin s;
+    draw_medians ~scale:scale ~g_origin:g_origin s;
     Graphics.set_color Graphics.blue;
-    List.iter (draw_rectangle ~scale:scale) lv;
-    List.iter (draw_rectangle ~scale:scale) lh;
+    List.iter (draw_rectangle ~scale:scale ~g_origin:g_origin) lv;
+    List.iter (draw_rectangle ~scale:scale ~g_origin:g_origin) lh;
     Graphics.set_color Graphics.black;
-    draw_rcquadtree ~scale:scale q1;
-    draw_rcquadtree ~scale:scale q2;
-    draw_rcquadtree ~scale:scale q3;
-    draw_rcquadtree ~scale:scale q4;;
+    draw_rcquadtree ~scale:scale ~g_origin:g_origin q1;
+    draw_rcquadtree ~scale:scale ~g_origin:g_origin q2;
+    draw_rcquadtree ~scale:scale ~g_origin:g_origin q3;
+    draw_rcquadtree ~scale:scale ~g_origin:g_origin q4;;

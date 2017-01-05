@@ -19,10 +19,10 @@ let new_state length scale margin =
   margin=margin;
   scale=scale;
   pos=0;
-  max_pos=1;
+  max_pos=10;
 };;
 
-let g_state = new_state 512 2 50;;
+let g_state = new_state 512 2 100;;
 
 let draw_window_title s title =
   set_window_title
@@ -31,28 +31,158 @@ let draw_window_title s title =
 let pquadtree_1 s () =
   let pqt =
     (pinsert
-      (pinsert ~surface:s.base_surface PEmpty {x=512; y=100})
-      {x=300; y=10})
-      (* pinsert (pinsert ~surface:{top=2; right=2; bottom=0; left=0} PEmpty {x=2; y=2}) {x=0; y=0} *)
+      (pinsert ~surface:s.base_surface PEmpty {x=234; y=100})
+      {x=32; y=400})
       in
-    draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
-    (* draw_string "HELLO"; *)
+    draw_pquadtree
+      ~g_origin:{x=406; y=s.g_origin.y} ~scale:s.scale pqt;
     draw_window_title s "Pquadtree 1";;
 
 let pquadtree_2 s () =
   let pqt = pinsert_list ~surface:s.base_surface [
-    {x=300; y=10}; {x=373; y=120}; {x=76; y=453}; {x=201; y=89};
-    {x=35; y=225}; {x=242; y=29}; {x=294; y=382}; {x=298; y=24};
-    {x=455; y=202}; {x=292; y=292}; {x=293; y=509}; {x=132; y=395};
-  ] in draw_pquadtree ~scale:s.scale ~g_origin:s.g_origin pqt;
-
-  (* let li = split_on_char '\n' (string_of_pquadtree pqt) in
-    draw_string (List.nth li 0); *)
+    {x=234; y=100}; {x=32; y=400}; {x=17; y=500};
+  ] in
+    draw_pquadtree ~scale:s.scale ~g_origin:{x=406; y=s.g_origin.y} pqt;
   draw_window_title s "Pquadtree 2";;
+
+let pquadtree_3 s () =
+  let pqt = pinsert_list ~surface:s.base_surface [
+    {x=234; y=100}; {x=32; y=400}; {x=17; y=500}; {x=33; y=22};
+  ] in
+    draw_pquadtree ~scale:s.scale ~g_origin:{x=406; y=s.g_origin.y} pqt;
+  draw_window_title s "Pquadtree 3";;
+
+let pquadtree_4 s () =
+  let pqt = pinsert_list ~surface:s.base_surface [
+    {x=234; y=100}; {x=32; y=400}; {x=17; y=500}; {x=33; y=22}; {x=240; y=150};
+  ] in
+    draw_pquadtree ~scale:s.scale ~g_origin:{x=406; y=s.g_origin.y} pqt;
+  draw_window_title s "Pquadtree 4";;
+
+let pquadtree_5 s () =
+  let pqt = pinsert_list ~surface:s.base_surface [
+    {x=234; y=100}; {x=32; y=400}; {x=17; y=500}; {x=33; y=22}; {x=240; y=150};
+    {x=274; y=100}; {x=324; y=235}; {x=23; y=382}; {x=50; y=320}; {x=20; y=150};
+    {x=234; y=120}; {x=104; y=204}; {x=124; y=239}; {x=24; y=204}; {x=240; y=150};
+    {x=14; y=130}; {x=32; y=303}; {x=214; y=392}; {x=33; y=22}; {x=240; y=244};
+    {x=35; y=225}; {x=242; y=429}; {x=294; y=382}; {x=298; y=24}; {x=15; y=204};
+    {x=292; y=292}; {x=293; y=509}; {x=132; y=395}; {x=284; y=125};
+    {x=462; y=98}; {x=307; y=390}; {x=510; y=248};
+
+  ] in
+    draw_pquadtree ~scale:s.scale ~g_origin:{x=406; y=s.g_origin.y} pqt;
+  draw_window_title s "Pquadtree 5";;
+
+let rquadtree_invert s () =
+  let qt = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  ) in
+  draw_rquadtree ~scale:s.scale ~g_origin:s.g_origin qt;
+  let res = invert qt in
+    let g_origin2 = {x=s.g_origin.x+s.base_length+100; y=s.g_origin.y} in
+      draw_rquadtree ~scale:s.scale ~g_origin:g_origin2 res;
+    draw_window_title s "Rquadtree: invert";;
+
+let rquadtree_intersection s () =
+  let qt1 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain Black
+  ) and
+  qt2 = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain White),
+    Plain White
+  ) and surface = {top=256; right=256; bottom=0; left=0} in
+    draw_rquadtree
+      ~scale:s.scale ~g_origin:{x=396; y=s.g_origin.y+300} ~surface:surface qt1;
+    draw_rquadtree
+      ~scale:s.scale ~g_origin:{x=672; y=s.g_origin.y+300} ~surface:surface qt2;
+  let res = intersection qt1 qt2 in
+      draw_rquadtree ~scale:s.scale
+        ~g_origin:{x=534; y=s.g_origin.y-50} ~surface:surface res;
+  draw_window_title s "Rquadtree: intersection";;
+
+let rquadtree_union s () =
+  let qt1 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain Black
+  ) and
+  qt2 = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain White),
+    Plain White
+  ) and surface = {top=256; right=256; bottom=0; left=0} in
+    draw_rquadtree
+      ~scale:s.scale ~g_origin:{x=396; y=s.g_origin.y+300} ~surface:surface qt1;
+    draw_rquadtree
+      ~scale:s.scale ~g_origin:{x=672; y=s.g_origin.y+300} ~surface:surface qt2;
+  let res = union qt1 qt2 in
+      draw_rquadtree ~scale:s.scale
+        ~g_origin:{x=534; y=s.g_origin.y-50} ~surface:surface res;
+  draw_window_title s "Rquadtree: union";;
+
+let rquadtree_vertical_symmetry s () =
+  let qt = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  ) in
+  draw_rquadtree ~scale:s.scale ~g_origin:s.g_origin qt;
+  let res = vertical_symmetry qt in
+    let g_origin2 = {x=s.g_origin.x+s.base_length+100; y=s.g_origin.y} in
+      draw_rquadtree ~scale:s.scale ~g_origin:g_origin2 res;
+  draw_window_title s "Rquadtree: vertical symmetry";;
+
+let rquadtree_horizontal_symmetry s () =
+  let qt = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  ) and surface = {top=256; right=256; bottom=0; left=0} in
+  let g_origin2 = {x=534; y=s.g_origin.y+300} in
+    draw_rquadtree ~scale:s.scale ~g_origin:g_origin2 ~surface:surface qt;
+  let res = horizontal_symmetry qt in
+    let g_origin3 = {x=534; y=s.g_origin.y-50} in
+      draw_rquadtree ~scale:s.scale ~g_origin:g_origin3 ~surface:surface res;
+  draw_window_title s "Rquadtree: horizontal symmetry";;
+
+let rcquadtree s () =
+  let pqt = rcinsert_list ~surface:s.base_surface [
+    {top=460; bottom=310; left=230; right=310};
+    {top=265; bottom=230; left=300; right=480};
+    {top=215; bottom=150; left=110; right=235};
+    {top=490; bottom=460; left=410; right=485};
+    {top=275; bottom=240; left=260; right=310};
+    {top=470; bottom=460; left=2;   right=20};
+    {top=250; bottom=210; left=270; right=305};
+  ] in
+    draw_rcquadtree ~scale:s.scale ~g_origin:{x=406; y=s.g_origin.y} pqt;
+  draw_window_title s "RCquadtree";;
+
 
 let demo_list = [
   (pquadtree_1 g_state);
   (pquadtree_2 g_state);
+  (pquadtree_3 g_state);
+  (pquadtree_4 g_state);
+  (pquadtree_5 g_state);
+  (rquadtree_invert g_state);
+  (rquadtree_intersection g_state);
+  (rquadtree_union g_state);
+  (rquadtree_vertical_symmetry g_state);
+  (rquadtree_horizontal_symmetry g_state);
+  (rcquadtree g_state);
 ]
 
 let skel f_init f_end f_key (*f_mouse*) f_except =
@@ -74,12 +204,11 @@ let skel f_init f_end f_key (*f_mouse*) f_except =
 
 let f_init s () =
   let screen_size = Printf.sprintf " %dx%d"
-    ((s.base_length+s.margin*2+400)*s.scale)
+    ((s.base_length*2+s.margin*2+100)*s.scale)
     ((s.base_length+s.margin*2)*s.scale) in
 
   open_graph screen_size;
-  set_line_width 2;
-  set_font "-*-fixed-medium-r-semicondensed--30-*-*-*-*-*-iso8859-1";
+  set_line_width s.scale;
   (List.nth demo_list s.pos) ();;
 
 let f_end state () =
@@ -103,20 +232,7 @@ let f_key state c =
 let f_except state e =
   Printf.printf "%s\n" (Printexc.to_string e);;
 
-let start () =
-  skel (f_init g_state) (f_end g_state) (f_key g_state)
-    (f_except g_state);;
-
-let () =
-  (****************************************************************************)
-  (*                             Graphical demo                               *)
-  (****************************************************************************)
-  (* start ();; *)
-
-  (****************************************************************************)
-  (*                             Terminal demo                                *)
-  (****************************************************************************)
-
+let start_terminal_demo =
   (*--------------------------------------------------------------------------*)
   print_string "******** Pquadtree ********\n";;
 
@@ -285,7 +401,7 @@ let () =
     {top=215; bottom=150; left=110; right=235};
     {top=490; bottom=460; left=410; right=485};
     {top=275; bottom=240; left=260; right=310};
-    {top=470; bottom=460; left=2; right=20};
+    {top=470; bottom=460; left=2;   right=20};
     {top=250; bottom=210; left=270; right=305};
   ];;
   let p12 = {x=303; y=245};;
@@ -294,3 +410,19 @@ let () =
     (string_of_rcquadtree qt12)
     (string_of_point p12)
     (string_of_rectangle_list res12);;
+
+let start_graphic_demo () =
+  skel (f_init g_state) (f_end g_state) (f_key g_state)
+    (f_except g_state);;
+
+
+let () =
+  (****************************************************************************)
+  (*                             Graphical demo                               *)
+  (****************************************************************************)
+  start_graphic_demo ();;
+
+  (****************************************************************************)
+  (*                             Terminal demo                                *)
+  (****************************************************************************)
+  (* start_terminal_demo;; *)
