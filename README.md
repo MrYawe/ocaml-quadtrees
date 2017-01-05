@@ -1,5 +1,8 @@
 # ocaml-quadtrees
 
+## Documentation
+You can find the documentation [here](https://mryawe.github.io/ocaml/quadtrees/).
+
 ## Installing
 `$ ocaml setup.ml -configure`                                     
 `$ ocaml setup.ml -build`                                                                                                       
