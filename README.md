@@ -17,6 +17,6 @@ You can find the documentation [here](https://mryawe.github.io/ocaml/quadtrees/)
 The program can be `Demo.byte` if the native build is not available on your computer.                                
 
 ## Run tests
-You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) intalled.
+You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) installed.
 
 `$ make test`                                                             
