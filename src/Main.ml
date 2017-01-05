@@ -108,10 +108,198 @@ let start () =
     (f_except g_state);;
 
 let () =
-  print_string "*** Begining ***";;
-  print_newline();;
+  (****************************************************************************)
+  (*                             Graphical demo                               *)
+  (****************************************************************************)
+  (* start ();; *)
 
-  start ();;
+  (****************************************************************************)
+  (*                             Terminal demo                                *)
+  (****************************************************************************)
+
+  (*--------------------------------------------------------------------------*)
+  print_string "******** Pquadtree ********\n";;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ pbelong ____\n";;
+  let qt1 = pinsert_list [
+    {x=40; y=24};
+    {x=10; y=10};
+  ];;
+  let p1 = {x=10; y=10};;
+  let res1 = pbelong p1 qt1;;
+  Printf.printf "pquadtree:%s\n\npoint:%s\n\nres:%B\n\n"
+    (string_of_pquadtree qt1)
+    (string_of_point p1)
+    res1;;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ ppath ____\n";;
+  let qt2 = pinsert_list [
+    {x=40; y=24};
+    {x=10; y=10};
+    {x=400; y=67};
+    {x=5; y=33};
+  ];;
+  let p2 = {x=5; y=33};;
+  let res2 = ppath p2 qt2;;
+  Printf.printf "pquadtree:%s\n\npoint:%s\n\nres:%s\n\n"
+    (string_of_pquadtree qt2)
+    (string_of_point p2)
+    (string_of_intercard_list res2);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ pinsert ____\n";;
+  let qt3 = (pinsert (pinsert PEmpty {x=30; y=30}) {x=300; y=10});;
+  Printf.printf "res:%s\n\n" (string_of_pquadtree qt3);;
+
+
+
+
+  (*--------------------------------------------------------------------------*)
+  print_string "******** Rquadtree ********\n";;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ invert ____\n";;
+  let qt4 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+  let res4 = invert qt4;;
+  Printf.printf "rquadtree:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt4)
+    (string_of_rquadtree res4);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ intersection ____\n";;
+  let qt5_1 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+  let qt5_2 = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain White),
+    Plain White
+  );;
+  let res5 = intersection qt5_1 qt5_2;;
+  Printf.printf "rquadtree1:%s\n\nrquadtree2:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt5_1)
+    (string_of_rquadtree qt5_2)
+    (string_of_rquadtree res5);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ union ____\n";;
+  let qt6_1 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+  let qt6_2 = RQ (
+    Plain Black,
+    Plain Black,
+    RQ (Plain Black, Plain White, Plain White, Plain White),
+    Plain White
+  );;
+  let res6 = intersection qt6_1 qt6_2;;
+  Printf.printf "rquadtree1:%s\n\nrquadtree2:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt6_1)
+    (string_of_rquadtree qt6_2)
+    (string_of_rquadtree res6);;
+
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ vertical_symmetry ____\n";;
+  let qt7 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+
+  let res7 = vertical_symmetry qt7;;
+  Printf.printf "rquadtree:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt7)
+    (string_of_rquadtree res7);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ horizontal_symmetry ____\n";;
+  let qt8 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+
+  let res8 = horizontal_symmetry qt8;;
+  Printf.printf "rquadtree:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt8)
+    (string_of_rquadtree res8);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ encode ____\n";;
+  let qt9 = RQ (
+    Plain Black,
+    Plain White,
+    RQ (Plain Black, Plain White, Plain White, Plain Black),
+    Plain White
+  );;
+  let res9 = encode qt9;;
+  Printf.printf "rquadtree:%s\n\nres:%s\n\n"
+    (string_of_rquadtree qt9)
+    (string_of_encoding res9);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ decode ____\n";;
+  let qt10 = [0;1;1;1;0;0;1;1;1;0;1;0;1;1;1;0];;
+  let res10 = decode qt10;;
+  Printf.printf "rquadtree:%s\n\nres:%s\n\n"
+    (string_of_encoding qt10)
+    (string_of_rquadtree res10);;
+
+
+
+
+  (*--------------------------------------------------------------------------*)
+  print_string "******** RCquadtree ********\n";;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ rcinsert ____\n";;
+  let qt11 = rcinsert_list [
+    {top=100; bottom=10; left=100; right=300};
+    {top=100; bottom=10; left=100; right=200};
+  ];;
+  Printf.printf "rcquadtree:%s\n\n"
+   (string_of_rcquadtree qt11);;
+
+  (*--------------------------------------------------------------------------*)
+  print_string "____ rccontain ____\n";;
+  let qt12 = rcinsert_list [
+    {top=460; bottom=310; left=230; right=310};
+    {top=265; bottom=230; left=300; right=480};
+    {top=215; bottom=150; left=110; right=235};
+    {top=490; bottom=460; left=410; right=485};
+    {top=275; bottom=240; left=260; right=310};
+    {top=470; bottom=460; left=2; right=20};
+    {top=250; bottom=210; left=270; right=305};
+  ];;
+  let p12 = {x=303; y=245};;
+  let res12 = rccontain qt12 p12;;
+  Printf.printf "rcquadtree:%s\n\npoint:%s\n\nres:%s\n\n"
+    (string_of_rcquadtree qt12)
+    (string_of_point p12)
+    (string_of_rectangle_list res12);;
+
+
+
+
+
+
 
 
   (* let pqt = (pinsert {x=300; y=10} (pinsert {x=30; y=30} PEmpty));; *)

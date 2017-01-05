@@ -122,7 +122,8 @@ let rec rcinsert ?(surface = base_surface) rcquadtree rect =
  *)
 let rcinsert_list ?(surface = base_surface) rect_list =
   List.fold_left (rcinsert ~surface:surface) RCEmpty rect_list;;
-
+  
+(* TODO *)
 let rccontain rcquadtree p =
   let rec aux acc = function
     | RCEmpty -> acc
@@ -136,20 +137,19 @@ let rccontain rcquadtree p =
       )
   in aux [] rcquadtree;;
 
-
 (**
   Return the string representation of the given rcquadtree.
 
   @param indent Optional parameter representing the number of spaces of
-  the indentation. Default is 0.
+  the indentation. Default is [0].
  *)
 let rec string_of_rcquadtree ?(indent=0) = function
   | RCEmpty -> "RCEmpty"
   | RCNode (s, lv, lh, q1, q2, q3, q4) ->
     let is = String.make indent ' ' and
     ss = string_of_rectangle s and
-    lvs = string_of_rectangle_list lv and
-    lhs = string_of_rectangle_list lh and
+    lvs = string_of_rectangle_list ~indent:(indent) lv and
+    lhs = string_of_rectangle_list ~indent:(indent) lh and
     q1s = string_of_rcquadtree ~indent:(indent+3) q1 and
     q2s = string_of_rcquadtree ~indent:(indent+3) q2 and
     q3s = string_of_rcquadtree ~indent:(indent+3) q3 and

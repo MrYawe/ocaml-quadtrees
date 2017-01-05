@@ -103,7 +103,7 @@ let test_horizontal_symmetry test_ctxt =
   assert_equal rqt_hsymme_result_1 (horizontal_symmetry rqt_hsymme_1);;
 
 (******************************************************************************)
-(*                               Test code                                    *)
+(*                              Test encode                                   *)
 (******************************************************************************)
 
 let rqt_code_1 = RQ (
@@ -116,7 +116,7 @@ let rqt_code_1 = RQ (
 let rqt_code_1_res = [0; 1;1; 1;0; 0;1;1;1;0;1;0;1;1; 1;0];;
 
 let test_code test_ctxt =
-  assert_equal (code rqt_code_1) rqt_code_1_res;;
+  assert_equal (encode rqt_code_1) rqt_code_1_res;;
 
 (******************************************************************************)
 (*                              Test decode                                   *)

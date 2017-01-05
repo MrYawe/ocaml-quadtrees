@@ -119,7 +119,7 @@ let ppath point pqt =
   if not (is_consistent pqt) then raise InconsistentPquadtree;
   let rec aux acc point = function
   | PEmpty -> failwith "no path found"
-  | PNode (p, _, _, _, _, _) when p=point -> []
+  | PNode (p, _, _, _, _, _) when p=point -> acc
   | PNode (p, r, q1, q2, q3, q4) ->
     let pole = get_pole point r in
       aux (pole::acc) point
@@ -180,7 +180,7 @@ let rec pinsert_list ?(surface = base_surface) li =
   Return the string representation of the given pquadtree.
 
   @param indent Optional parameter representing the number of spaces of
-  the indentation. Default is 0.
+  the indentation. Default is [0].
  *)
 let rec string_of_pquadtree ?(indent=0) pqt =
   if not (is_consistent pqt) then raise InconsistentPquadtree;

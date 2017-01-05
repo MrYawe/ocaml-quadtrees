@@ -23,7 +23,7 @@ type rect = {top: int; bottom: int; left: int; right: int};;
   A given rectangle can be divided in 4 equal rectangles corresponding to
   an intercardinal direction.
  *)
-type intercardinal_directions = NW | NE | SW | SE;;
+type intercardinal_direction = NW | NE | SW | SE;;
 
 (**
   Exception raised when a given rectangle is inconsistent.
@@ -187,6 +187,22 @@ let horizontal_median_cross rect1 rect2 =
     rect2.bottom <= c.y && c.y <= rect2.top;;
 
 (**
+  Return the string representation of the given intercardinal direction.
+ *)
+let string_of_intercard = function
+  | NW -> "NW"
+  | NE -> "NE"
+  | SW -> "SW"
+  | SE -> "SE";;
+
+(**
+  Return the string representation of the given intercardinal direction list.
+ *)
+let string_of_intercard_list li =
+  let m = List.map string_of_intercard li in
+    String.concat " " m;;
+
+(**
   Return the string representation of the given rectangle.
  *)
 let string_of_rectangle rect =
@@ -200,7 +216,9 @@ let string_of_rectangle rect =
 let string_of_rectangle_list ?(indent=0) li =
   let rect_strings = List.map string_of_rectangle li and
   i = String.make indent ' ' and
-  i2 = String.make (indent+3) ' ' in
+  i2 = String.make (indent+3) ' ' in match li with
+  | [] -> Printf.sprintf "\n%s[]" i 
+  | _ ->
     let rect_strings = String.concat (Printf.sprintf ";\n%s" i2) rect_strings in
       Printf.sprintf "\n%s[\n%s%s\n%s]" i i2 rect_strings i;;
 

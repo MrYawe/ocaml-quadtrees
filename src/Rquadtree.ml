@@ -102,9 +102,9 @@ let rec horizontal_symmetry = function
       vertical_symmetry q1, vertical_symmetry q2);;
 
 (**
-  Return the binary encoding of the given rquadtree as list of [O] or [1].
+  Return the binary encoding of the given rquadtree as list of [O] and [1].
  *)
-let code rquadtree =
+let encode rquadtree =
   let rec code_step acc = function
     | Plain White -> 1::0::acc
     | Plain Black -> 1::1::acc
@@ -129,6 +129,32 @@ let decode l =
         RQ (q1, q2, q3, q4), l
     | _ -> raise InconsistentEncoding
   in let rqt, _ = decode_step l in rqt;;
+
+(**
+  Return the string representation of the given rquadtree encoding.
+ *)
+let rec string_of_encoding encoding =
+  let m = List.map string_of_int encoding in
+    String.concat "" m;;
+
+(**
+  Return the string representation of the given rquadtree.
+
+  @param indent Optional parameter representing the number of spaces of
+  the indentation. Default is [0].
+ *)
+let rec string_of_rquadtree ?(indent=0) = function
+  | Plain Black -> "Black"
+  | Plain White -> "White"
+  | RQ (q1, q2, q3, q4) ->
+    let is = String.make indent ' ' and
+    q1s = string_of_rquadtree ~indent:(indent+3) q1 and
+    q2s = string_of_rquadtree ~indent:(indent+3) q2 and
+    q3s = string_of_rquadtree ~indent:(indent+3) q3 and
+    q4s = string_of_rquadtree ~indent:(indent+3) q4 in
+      Printf.sprintf
+        "\n%sq1:%s\n%sq2:%s\n%sq3:%s\n%sq4:%s"
+        is q1s is q2s is q3s is q4s;;
 
 (**
   The default graphical origin used by draw functions of this module.
