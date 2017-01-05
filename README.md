@@ -13,9 +13,12 @@ You can find the documentation [here](https://mryawe.github.io/ocaml/quadtrees/)
 
 ## Run the demo program
 `$ make`                                                                          
-`$ ./Demo.native`         
-The program can be `Demo.byte` if the native build is not available on your computer.                                
+`$ ./Demo.native`
+The program can be `Demo.byte` if the native build is not available on your computer.
 
+You can use the `SCALE` env variable to fit your needs.                                                 
+`$ SCALE=2 ./Demo.native`                                             
+ 
 ## Run tests
 You need to have [OUnit2](http://ounit.forge.ocamlcore.org/) installed.
 
